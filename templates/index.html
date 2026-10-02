@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Pharmacy Student Analytics Dashboard
+    </title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #1457a6,
+                #2478ce
+            );
+
+            color: white;
+            padding: 28px 42px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 17px;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        .navbar {
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 32px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            overflow-x: auto;
+        }
+
+        .navbar a {
+            text-decoration: none;
+
+            color: #1f2937;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            padding: 17px 20px;
+
+            border-bottom:
+                3px solid transparent;
+
+            white-space: nowrap;
+        }
+
+        .navbar a:hover {
+            color: #1769c2;
+
+            background: #f7faff;
+        }
+
+        .navbar a.active {
+            color: #1769c2;
+
+            border-bottom:
+                3px solid #1769c2;
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .container {
+            max-width: 1500px;
+
+            margin: auto;
+
+            padding:
+                32px 42px 50px;
+        }
+
+
+        /* =====================================================
+           PAGE TITLE
+        ===================================================== */
+
+        .page-title {
+            margin-bottom: 26px;
+        }
+
+        .page-title h2 {
+            margin: 0;
+
+            color: #1769c2;
+
+            font-size: 28px;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+
+            color: #64748b;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           KPI GRID
+        ===================================================== */
+
+        .kpi-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 22px;
+        }
+
+        .kpi-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+
+            min-height: 145px;
+        }
+
+        .kpi-title {
+            color: #64748b;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            color: #1769c2;
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            line-height: 1.2;
+        }
+
+        .kpi-description {
+            color: #8a94a3;
+
+            font-size: 12px;
+
+            margin-top: 10px;
+
+            line-height: 1.4;
+        }
+
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 26px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            margin: 0;
+
+            font-size: 21px;
+
+            color: #172033;
+        }
+
+        .section-header p {
+            margin: 7px 0 0;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           DATASET STATUS
+        ===================================================== */
+
+        .status-box {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            background: #f7fbff;
+
+            border:
+                1px solid #d9e9f8;
+
+            border-radius: 10px;
+
+            padding: 20px;
+        }
+
+        .status-icon {
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 50%;
+
+            background: #dff6e8;
+
+            color: #15803d;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 23px;
+
+            flex-shrink: 0;
+        }
+
+        .status-title {
+            font-size: 15px;
+
+            font-weight: 700;
+
+            color: #172033;
+        }
+
+        .status-text {
+            margin-top: 5px;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           CHART GRID
+        ===================================================== */
+
+        .chart-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 22px;
+        }
+
+        .chart-card {
+            background: #ffffff;
+
+            border:
+                1px solid #edf0f4;
+
+            border-radius: 10px;
+
+            padding: 18px;
+
+            min-height: 380px;
+        }
+
+        .chart-card h4 {
+            margin: 0 0 15px;
+
+            color: #172033;
+
+            font-size: 16px;
+        }
+
+        .chart-container {
+            position: relative;
+
+            height: 300px;
+        }
+
+
+        /* =====================================================
+           DATASET SUMMARY
+        ===================================================== */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+        }
+
+        .summary-card {
+            background: #f7faff;
+
+            border:
+                1px solid #dbe8f7;
+
+            border-radius: 10px;
+
+            padding: 20px;
+        }
+
+        .summary-card h4 {
+            margin: 0;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+        .summary-value {
+            margin-top: 9px;
+
+            color: #1769c2;
+
+            font-size: 25px;
+
+            font-weight: 700;
+        }
+
+        .summary-description {
+            margin-top: 6px;
+
+            color: #7b8492;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           DASHBOARD PAGE LINKS
+        ===================================================== */
+
+        .page-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+        }
+
+        .page-card {
+            display: block;
+
+            text-decoration: none;
+
+            background: #ffffff;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 10px;
+
+            padding: 21px;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+        }
+
+        .page-card:hover {
+            transform: translateY(-3px);
+
+            border-color: #b8d5f2;
+
+            box-shadow:
+                0 8px 20px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .page-card h4 {
+            margin: 0;
+
+            color: #1769c2;
+
+            font-size: 16px;
+        }
+
+        .page-card p {
+            margin: 8px 0 0;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            text-align: center;
+
+            padding: 28px;
+
+            color: #7b8492;
+
+            font-size: 12px;
+
+            background: #f4f7fb;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1200px) {
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .summary-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .page-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .header {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                padding:
+                    25px 18px 40px;
+            }
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 550px) {
+
+            .kpi-grid,
+            .summary-grid,
+            .page-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 10px;
+            }
+
+            .navbar a {
+                padding:
+                    14px 12px;
+
+                font-size: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <h1>
+        Pharmacy Student Analytics Dashboard
+    </h1>
+
+    <p>
+        Academic Performance &amp; Student Data Analysis
+    </p>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav class="navbar">
+
+    <a href="{{ url_for('index') }}"
+       class="active">
+        Overview
+    </a>
+
+    <a href="{{ url_for('students_information') }}">
+        Student Information
+    </a>
+
+    <a href="{{ url_for('academic_analysis') }}">
+        Academic Analysis
+    </a>
+
+    <a href="{{ url_for('statistics') }}">
+        Statistics
+    </a>
+
+    <a href="{{ url_for('correlation') }}">
+        Correlation
+    </a>
+
+    <a href="{{ url_for('prediction') }}">
+        Prediction
+    </a>
+
+    <a href="{{ url_for('add_student_page') }}"
+       style="color:#1769c2; font-weight:700;">
+        + Add Student
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         PAGE TITLE
+    ===================================================== -->
+
+    <div class="page-title">
+
+        <h2>
+            Dashboard Overview
+        </h2>
+
+        <p>
+            Analyze pharmacy student academic performance,
+            attendance, GPAT preparation and student outcomes.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         KPI CARDS
+    ===================================================== -->
+
+    <div class="kpi-grid">
+
+
+        <!-- Total Students -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Total Students
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.total_students }}
+            </div>
+
+            <div class="kpi-description">
+                Students available in the dataset
+            </div>
+
+        </div>
+
+
+        <!-- Average CGPA -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average CGPA
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.average_cgpa }}
+            </div>
+
+            <div class="kpi-description">
+                Overall academic CGPA
+            </div>
+
+        </div>
+
+
+        <!-- Average Attendance -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average Attendance
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.average_attendance }}%
+            </div>
+
+            <div class="kpi-description">
+                Average student attendance
+            </div>
+
+        </div>
+
+
+        <!-- Average Percentage -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average Percentage
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.average_percentage }}%
+            </div>
+
+            <div class="kpi-description">
+                Average academic percentage
+            </div>
+
+        </div>
+
+
+        <!-- Average GPAT -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average GPAT Score
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.average_gpat_score }}
+            </div>
+
+            <div class="kpi-description">
+                Average GPAT mock score
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         SECOND KPI ROW
+    ===================================================== -->
+
+    <div class="kpi-grid"
+         style="grid-template-columns: repeat(3, 1fr);">
+
+
+        <!-- Average Backlogs -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average Backlogs
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.average_backlogs }}
+            </div>
+
+            <div class="kpi-description">
+                Average backlogs per student
+            </div>
+
+        </div>
+
+
+        <!-- Total Backlogs -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Total Backlogs
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.total_backlogs }}
+            </div>
+
+            <div class="kpi-description">
+                Total backlog count across all students
+            </div>
+
+        </div>
+
+
+        <!-- Dataset Size -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Dataset Records
+            </div>
+
+            <div class="kpi-value">
+                {{ summary.total_students }}
+            </div>
+
+            <div class="kpi-description">
+                Records saved in the database
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         DATASET STATUS
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Dataset Status
+            </h3>
+
+            <p>
+                Current connection to the pharmacy student
+                student database.
+            </p>
+
+        </div>
+
+
+        <div class="status-box">
+
+            <div class="status-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <div class="status-title">
+                    Dataset Connected
+                </div>
+
+                <div class="status-text">
+                    {{ summary.total_students }}
+                    student records successfully loaded
+                    from the database.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STUDENT DISTRIBUTION
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Student Distribution
+            </h3>
+
+            <p>
+                Overview of student demographic and
+                academic-status distributions calculated
+                from the current dataset.
+            </p>
+
+        </div>
+
+
+        <div class="chart-grid">
+
+
+            <!-- Gender -->
+
+            <div class="chart-card">
+
+                <h4>
+                    Gender Distribution
+                </h4>
+
+                <div class="chart-container">
+
+                    <canvas id="genderChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- Internship -->
+
+            <div class="chart-card">
+
+                <h4>
+                    Internship Status
+                </h4>
+
+                <div class="chart-container">
+
+                    <canvas id="internshipChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- Project -->
+
+            <div class="chart-card">
+
+                <h4>
+                    Project Status
+                </h4>
+
+                <div class="chart-container">
+
+                    <canvas id="projectChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- Placement -->
+
+            <div class="chart-card">
+
+                <h4>
+                    Placement Status
+                </h4>
+
+                <div class="chart-container">
+
+                    <canvas id="placementChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATASET SUMMARY
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Dataset Summary
+            </h3>
+
+            <p>
+                Key information calculated directly from
+                the current dataset.
+            </p>
+
+        </div>
+
+
+        <div class="summary-grid">
+
+
+            <!-- Total Backlogs -->
+
+            <div class="summary-card">
+
+                <h4>
+                    Total Backlogs
+                </h4>
+
+                <div class="summary-value">
+                    {{ summary.total_backlogs }}
+                </div>
+
+                <div class="summary-description">
+                    Total backlog count across students
+                </div>
+
+            </div>
+
+
+            <!-- CGPA -->
+
+            <div class="summary-card">
+
+                <h4>
+                    Average CGPA
+                </h4>
+
+                <div class="summary-value">
+                    {{ summary.average_cgpa }}
+                </div>
+
+                <div class="summary-description">
+                    Calculated from all student records
+                </div>
+
+            </div>
+
+
+            <!-- Attendance -->
+
+            <div class="summary-card">
+
+                <h4>
+                    Average Attendance
+                </h4>
+
+                <div class="summary-value">
+                    {{ summary.average_attendance }}%
+                </div>
+
+                <div class="summary-description">
+                    Based on Attendance % column
+                </div>
+
+            </div>
+
+
+            <!-- Percentage -->
+
+            <div class="summary-card">
+
+                <h4>
+                    Average Percentage
+                </h4>
+
+                <div class="summary-value">
+                    {{ summary.average_percentage }}%
+                </div>
+
+                <div class="summary-description">
+                    Based on Percentage column
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DASHBOARD PAGES
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Dashboard Pages
+            </h3>
+
+            <p>
+                Explore detailed analysis generated directly
+                from the pharmacy student dataset.
+            </p>
+
+        </div>
+
+
+        <div class="page-grid">
+
+
+            <!-- Student Information -->
+
+            <a
+                href="{{ url_for('students_information') }}"
+                class="page-card">
+
+                <h4>
+                    Student Information
+                </h4>
+
+                <p>
+                    Search, filter and explore individual
+                    student academic and career information.
+                </p>
+
+            </a>
+
+
+            <!-- Academic Analysis -->
+
+            <a
+                href="{{ url_for('academic_analysis') }}"
+                class="page-card">
+
+                <h4>
+                    Academic Analysis
+                </h4>
+
+                <p>
+                    Explore subject-wise average marks,
+                    student performance and academic trends.
+                </p>
+
+            </a>
+
+
+            <!-- Statistics -->
+
+            <a
+                href="{{ url_for('statistics') }}"
+                class="page-card">
+
+                <h4>
+                    Statistics
+                </h4>
+
+                <p>
+                    Calculate and examine mean, median,
+                    standard deviation, minimum and maximum.
+                </p>
+
+            </a>
+
+
+            <!-- Correlation -->
+
+            <a
+                href="{{ url_for('correlation') }}"
+                class="page-card">
+
+                <h4>
+                    Correlation
+                </h4>
+
+                <p>
+                    Explore relationships between numerical
+                    student variables using correlation analysis.
+                </p>
+
+            </a>
+
+
+            <!-- Prediction -->
+
+            <a
+                href="{{ url_for('prediction') }}"
+                class="page-card">
+
+                <h4>
+                    Prediction
+                </h4>
+
+                <p>
+                    Use the regression model to estimate
+                    academic percentage from student inputs.
+                </p>
+
+            </a>
+
+
+            <!-- Dataset -->
+
+            <a
+                href="{{ url_for('students_information') }}"
+                class="page-card">
+
+                <h4>
+                    Student Dataset
+                </h4>
+
+                <p>
+                    View the complete student records loaded
+                    from the student database.
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+    Pharmacy Student Analytics Dashboard
+
+    <br>
+
+    Data-driven academic performance analysis
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   DATA FROM FLASK
+========================================================= */
+
+const genderLabels =
+    {{ gender_labels | tojson }};
+
+const genderValues =
+    {{ gender_values | tojson }};
+
+
+const internshipLabels =
+    {{ internship_labels | tojson }};
+
+const internshipValues =
+    {{ internship_values | tojson }};
+
+
+const projectLabels =
+    {{ project_labels | tojson }};
+
+const projectValues =
+    {{ project_values | tojson }};
+
+
+const placementLabels =
+    {{ placement_labels | tojson }};
+
+const placementValues =
+    {{ placement_values | tojson }};
+
+
+/* =========================================================
+   COMMON CHART OPTIONS
+========================================================= */
+
+const commonOptions = {
+
+    responsive: true,
+
+    maintainAspectRatio: false,
+
+    plugins: {
+
+        legend: {
+
+            position: "bottom",
+
+            labels: {
+
+                padding: 15,
+
+                usePointStyle: true
+
+            }
+
+        }
+
+    }
+
+};
+
+
+/* =========================================================
+   GENDER CHART
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "genderChart"
+    ),
+
+    {
+
+        type: "doughnut",
+
+        data: {
+
+            labels:
+                genderLabels,
+
+            datasets: [
+
+                {
+
+                    data:
+                        genderValues,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options:
+            commonOptions
+
+    }
+
+);
+
+
+/* =========================================================
+   INTERNSHIP CHART
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "internshipChart"
+    ),
+
+    {
+
+        type: "doughnut",
+
+        data: {
+
+            labels:
+                internshipLabels,
+
+            datasets: [
+
+                {
+
+                    data:
+                        internshipValues,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options:
+            commonOptions
+
+    }
+
+);
+
+
+/* =========================================================
+   PROJECT CHART
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "projectChart"
+    ),
+
+    {
+
+        type: "doughnut",
+
+        data: {
+
+            labels:
+                projectLabels,
+
+            datasets: [
+
+                {
+
+                    data:
+                        projectValues,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options:
+            commonOptions
+
+    }
+
+);
+
+
+/* =========================================================
+   PLACEMENT CHART
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "placementChart"
+    ),
+
+    {
+
+        type: "doughnut",
+
+        data: {
+
+            labels:
+                placementLabels,
+
+            datasets: [
+
+                {
+
+                    data:
+                        placementValues,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options:
+            commonOptions
+
+    }
+
+);
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Correlation | Pharmacy Student Analytics Dashboard
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #1457a6,
+                    #1d70c9
+                );
+
+            color: white;
+
+            padding: 28px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+           ===================================================== */
+
+        .navbar {
+            background: white;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            padding: 0 30px;
+
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 4px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+
+            color: #374151;
+
+            padding: 16px 18px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            border-bottom:
+                3px solid transparent;
+        }
+
+        .navbar a:hover {
+            color: #1769c2;
+            background: #f4f8fd;
+        }
+
+        .navbar a.active {
+            color: #1769c2;
+
+            border-bottom:
+                3px solid #1769c2;
+        }
+
+
+        /* =====================================================
+           CONTAINER
+           ===================================================== */
+
+        .container {
+            max-width: 1500px;
+
+            margin: auto;
+
+            padding:
+                30px 35px 50px;
+        }
+
+
+        /* =====================================================
+           PAGE HEADING
+           ===================================================== */
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h2 {
+            margin: 0 0 8px;
+
+            color: #1769c2;
+
+            font-size: 27px;
+        }
+
+        .page-heading p {
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           KPI CARDS
+           ===================================================== */
+
+        .kpi-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(190px, 1fr)
+                );
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: white;
+
+            border:
+                1px solid #edf0f4;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+        }
+
+        .kpi-title {
+            color: #687386;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            color: #1769c2;
+
+            font-size: 27px;
+
+            font-weight: 700;
+        }
+
+        .kpi-description {
+            margin-top: 8px;
+
+            color: #8a94a3;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           SECTION
+           ===================================================== */
+
+        .section {
+            background: white;
+
+            border:
+                1px solid #edf0f4;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            margin: 0;
+
+            font-size: 20px;
+        }
+
+        .section-header p {
+            margin: 6px 0 0;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           CORRELATION CALCULATOR
+           ===================================================== */
+
+        .calculator-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(250px, 1fr)
+                );
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #374151;
+
+            margin-bottom: 8px;
+        }
+
+        .form-group select {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            background: white;
+
+            font-size: 14px;
+
+            color: #1f2937;
+
+            outline: none;
+        }
+
+        .form-group select:focus {
+            border-color: #1769c2;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(23,105,194,0.10);
+        }
+
+        .calculate-button {
+            background: #1769c2;
+
+            color: white;
+
+            border: none;
+
+            padding: 13px 25px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .calculate-button:hover {
+            background: #1457a6;
+        }
+
+        .reset-button {
+            background: #eef2f7;
+
+            color: #374151;
+
+            border: none;
+
+            padding: 13px 25px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            margin-left: 8px;
+        }
+
+        .reset-button:hover {
+            background: #e2e8f0;
+        }
+
+
+        /* =====================================================
+           RESULT AREA
+           ===================================================== */
+
+        .result-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(170px, 1fr)
+                );
+
+            gap: 16px;
+
+            margin-top: 25px;
+        }
+
+        .result-card {
+            background: #f7faff;
+
+            border:
+                1px solid #dbe8f7;
+
+            border-radius: 10px;
+
+            padding: 18px;
+        }
+
+        .result-title {
+            color: #687386;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            color: #1769c2;
+
+            font-size: 25px;
+
+            font-weight: 700;
+        }
+
+        .result-description {
+            color: #7b8492;
+
+            font-size: 11px;
+
+            margin-top: 6px;
+        }
+
+
+        /* =====================================================
+           SCATTER CHART
+           ===================================================== */
+
+        .chart-container {
+            position: relative;
+
+            height: 500px;
+        }
+
+
+        /* =====================================================
+           INTERPRETATION
+           ===================================================== */
+
+        .interpretation-box {
+            background: #f7faff;
+
+            border:
+                1px solid #dbe8f7;
+
+            border-left:
+                5px solid #1769c2;
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            line-height: 1.7;
+
+            color: #4b5563;
+
+            font-size: 14px;
+
+            margin-top: 20px;
+        }
+
+        .interpretation-box strong {
+            color: #1769c2;
+        }
+
+
+        /* =====================================================
+           TABLE
+           ===================================================== */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 850px;
+        }
+
+        th {
+            background: #f1f6fc;
+
+            color: #374151;
+
+            padding:
+                13px 12px;
+
+            text-align: left;
+
+            font-size: 12px;
+
+            border-bottom:
+                1px solid #dbe3ec;
+        }
+
+        td {
+            padding:
+                13px 12px;
+
+            font-size: 12px;
+
+            border-bottom:
+                1px solid #edf0f4;
+        }
+
+        tr:hover td {
+            background: #f8fbff;
+        }
+
+
+        /* =====================================================
+           BADGES
+           ===================================================== */
+
+        .badge {
+            display: inline-block;
+
+            padding:
+                5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+        .positive {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .negative {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .neutral {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+
+        /* =====================================================
+           INFORMATION BOX
+           ===================================================== */
+
+        .info-box {
+            background: #f7faff;
+
+            border:
+                1px solid #dbe8f7;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            line-height: 1.7;
+
+            color: #4b5563;
+
+            font-size: 13px;
+        }
+
+        .info-box strong {
+            color: #1769c2;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #7b8492;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           LOADING
+           ===================================================== */
+
+        .loading {
+            color: #1769c2;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            margin-top: 15px;
+        }
+
+        .error-message {
+            color: #b91c1c;
+
+            background: #fee2e2;
+
+            border:
+                1px solid #fecaca;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-top: 15px;
+
+            display: none;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+            }
+
+            .result-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 22px;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .container {
+                padding:
+                    25px 15px 40px;
+            }
+
+            .navbar {
+                padding:
+                    0 10px;
+
+                overflow-x: auto;
+
+                flex-wrap: nowrap;
+            }
+
+            .navbar a {
+                white-space: nowrap;
+
+                padding:
+                    12px 10px;
+
+                font-size: 12px;
+            }
+
+            .kpi-grid,
+            .calculator-grid,
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="header">
+
+    <h1>
+        Pharmacy Student Analytics Dashboard
+    </h1>
+
+    <p>
+        Academic Performance &amp; Student Data Analysis
+    </p>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+
+<nav class="navbar">
+
+    <a href="{{ url_for('index') }}">
+        Overview
+    </a>
+
+    <a href="{{ url_for('students_information') }}">
+        Student Information
+    </a>
+
+    <a href="{{ url_for('academic_analysis') }}">
+        Academic Analysis
+    </a>
+
+    <a href="{{ url_for('statistics') }}">
+        Statistics
+    </a>
+
+    <a href="{{ url_for('correlation') }}"
+       class="active">
+        Correlation
+    </a>
+
+    <a href="{{ url_for('prediction') }}">
+        Prediction
+    </a>
+
+    <a href="{{ url_for('add_student_page') }}"
+       style="color:#1769c2; font-weight:700;">
+        + Add Student
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         PAGE HEADING
+         ===================================================== -->
+
+    <div class="page-heading">
+
+        <h2>
+            Correlation Analysis
+        </h2>
+
+        <p>
+            Explore the relationship between any two numerical
+            variables in the pharmacy student dataset.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATASET KPI
+         ===================================================== -->
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Student Records
+            </div>
+
+            <div class="kpi-value"
+                 id="recordCount">
+                Loading...
+            </div>
+
+            <div class="kpi-description">
+                Records saved in the database
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Variable X
+            </div>
+
+            <div class="kpi-value"
+                 id="selectedXDisplay"
+                 style="font-size:20px;">
+                —
+            </div>
+
+            <div class="kpi-description">
+                First selected variable
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Variable Y
+            </div>
+
+            <div class="kpi-value"
+                 id="selectedYDisplay"
+                 style="font-size:20px;">
+                —
+            </div>
+
+            <div class="kpi-description">
+                Second selected variable
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Correlation
+            </div>
+
+            <div class="kpi-value"
+                 id="topCorrelation">
+                —
+            </div>
+
+            <div class="kpi-description">
+                Pearson correlation coefficient
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         CORRELATION CALCULATOR
+         ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Correlation Calculator
+            </h3>
+
+            <p>
+                Select two numerical variables and calculate
+                their Pearson correlation using the current
+                student records.
+            </p>
+
+        </div>
+
+
+        <div class="calculator-grid">
+
+
+            <div class="form-group">
+
+                <label for="variableX">
+                    Variable X
+                </label>
+
+                <select id="variableX">
+
+                    <option value="">
+                        Select first variable
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="variableY">
+                    Variable Y
+                </label>
+
+                <select id="variableY">
+
+                    <option value="">
+                        Select second variable
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            class="calculate-button"
+            onclick="calculateCorrelation()">
+
+            Calculate Correlation
+
+        </button>
+
+
+        <button
+            class="reset-button"
+            onclick="resetCorrelation()">
+
+            Reset
+
+        </button>
+
+
+        <div
+            id="loadingMessage"
+            class="loading">
+
+            Loading dataset...
+
+        </div>
+
+
+        <div
+            id="errorMessage"
+            class="error-message">
+
+        </div>
+
+
+        <!-- =================================================
+             CALCULATION RESULTS
+             ================================================= -->
+
+        <div
+            class="result-grid"
+            id="resultGrid"
+            style="display:none;">
+
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Pearson Correlation
+                </div>
+
+                <div
+                    class="result-value"
+                    id="correlationValue">
+
+                    —
+
+                </div>
+
+                <div class="result-description">
+                    Range: -1 to +1
+                </div>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Relationship
+                </div>
+
+                <div
+                    class="result-value"
+                    id="relationshipValue"
+                    style="font-size:20px;">
+
+                    —
+
+                </div>
+
+                <div class="result-description">
+                    Direction of relationship
+                </div>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Strength
+                </div>
+
+                <div
+                    class="result-value"
+                    id="strengthValue"
+                    style="font-size:20px;">
+
+                    —
+
+                </div>
+
+                <div class="result-description">
+                    Based on absolute correlation
+                </div>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Observations
+                </div>
+
+                <div
+                    class="result-value"
+                    id="observationValue">
+
+                    —
+
+                </div>
+
+                <div class="result-description">
+                    Valid student records used
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             INTERPRETATION
+             ================================================= -->
+
+        <div
+            id="interpretationBox"
+            class="interpretation-box"
+            style="display:none;">
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         SCATTER PLOT
+         ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Student-Level Relationship
+            </h3>
+
+            <p id="chartDescription">
+                Select two variables and calculate the correlation
+                to display the student-level scatter plot.
+            </p>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            <canvas id="scatterChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALL VARIABLE CORRELATIONS WITH SELECTED Y
+         ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Correlation With Selected Y Variable
+            </h3>
+
+            <p>
+                Pearson correlation calculated between the selected
+                Y variable and every available numerical variable.
+            </p>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Variable
+                        </th>
+
+                        <th>
+                            Correlation
+                        </th>
+
+                        <th>
+                            Relationship
+                        </th>
+
+                        <th>
+                            Strength
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="correlationTableBody">
+
+                    <tr>
+
+                        <td colspan="4"
+                            style="text-align:center;">
+
+                            Select a Y variable and calculate correlation.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         UNDERSTANDING CORRELATION
+         ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Understanding Correlation
+            </h3>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <p>
+
+                <strong>Pearson correlation coefficient</strong>
+                measures the strength and direction of a linear
+                relationship between two numerical variables.
+
+            </p>
+
+
+            <p>
+
+                A value close to
+                <strong>+1</strong>
+                indicates a strong positive linear relationship.
+
+            </p>
+
+
+            <p>
+
+                A value close to
+                <strong>-1</strong>
+                indicates a strong negative linear relationship.
+
+            </p>
+
+
+            <p>
+
+                A value close to
+                <strong>0</strong>
+                indicates little or no linear relationship.
+
+            </p>
+
+
+            <p>
+
+                <strong>Important:</strong>
+                Correlation describes an association and does not
+                establish causation.
+
+            </p>
+
+
+            <p>
+
+                <strong>Dataset note:</strong>
+                Percentage is calculated from academic marks.
+                Therefore, correlations involving Total Marks
+                and individual subject marks can be very high.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer class="footer">
+
+    Pharmacy Student Analytics Dashboard
+
+    <br>
+
+    Data-driven academic performance analysis
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+   ========================================================= */
+
+let studentData = [];
+
+let scatterChart = null;
+
+
+/* =========================================================
+   NUMERICAL VARIABLES FROM YOUR DATASET
+   ========================================================= */
+
+const numericalVariables = [
+
+    "Age",
+
+    "Attendance %",
+
+    "CGPA",
+
+    "Medicinal Chemistry - II",
+
+    "Industrial Pharmacy - I",
+
+    "Pharmacology - II",
+
+    "Pharmacognosy and Phytochemistry - II",
+
+    "Pharmaceutical Jurisprudence",
+
+    "Total Marks",
+
+    "Percentage",
+
+    "GPAT Mock Score",
+
+    "Backlogs"
+
+];
+
+
+/* =========================================================
+   LOAD DATA
+   ========================================================= */
+
+async function loadStudentData() {
+
+    try {
+
+        const response =
+            await fetch("/api/data");
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load dataset."
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        /*
+         * Supports:
+         *
+         * {"data": [...]}
+         *
+         * and also:
+         *
+         * [...]
+         */
+
+        if (Array.isArray(result)) {
+
+            studentData = result;
+
+        }
+
+        else if (Array.isArray(result.data)) {
+
+            studentData = result.data;
+
+        }
+
+        else if (Array.isArray(result.records)) {
+
+            studentData = result.records;
+
+        }
+
+        else {
+
+            throw new Error(
+                "Unexpected API response format."
+            );
+
+        }
+
+
+        document.getElementById(
+            "recordCount"
+        ).textContent =
+            studentData.length;
+
+
+        populateVariableDropdowns();
+
+
+        document.getElementById(
+            "loadingMessage"
+        ).style.display = "none";
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        document.getElementById(
+            "loadingMessage"
+        ).style.display = "none";
+
+
+        showError(
+            "Unable to load the student dataset. " +
+            "Please check that Flask is running."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   POPULATE DROPDOWNS
+   ========================================================= */
+
+function populateVariableDropdowns() {
+
+    const xSelect =
+        document.getElementById(
+            "variableX"
+        );
+
+
+    const ySelect =
+        document.getElementById(
+            "variableY"
+        );
+
+
+    numericalVariables.forEach(
+        function(variable) {
+
+
+            const xOption =
+                document.createElement("option");
+
+            xOption.value =
+                variable;
+
+            xOption.textContent =
+                variable;
+
+            xSelect.appendChild(
+                xOption
+            );
+
+
+            const yOption =
+                document.createElement("option");
+
+            yOption.value =
+                variable;
+
+            yOption.textContent =
+                variable;
+
+            ySelect.appendChild(
+                yOption
+            );
+
+        }
+    );
+
+
+    /*
+     * Default selection
+     */
+
+    xSelect.value =
+        "Attendance %";
+
+
+    ySelect.value =
+        "Percentage";
+
+
+    updateSelectedDisplay();
+
+}
+
+
+/* =========================================================
+   CALCULATE PEARSON CORRELATION
+   ========================================================= */
+
+function calculatePearson(
+    xValues,
+    yValues
+) {
+
+    if (
+        xValues.length < 2 ||
+        yValues.length < 2
+    ) {
+
+        return null;
+
+    }
+
+
+    const n =
+        xValues.length;
+
+
+    const meanX =
+        xValues.reduce(
+            (sum, value) =>
+                sum + value,
+            0
+        ) / n;
+
+
+    const meanY =
+        yValues.reduce(
+            (sum, value) =>
+                sum + value,
+            0
+        ) / n;
+
+
+    let numerator = 0;
+
+    let denominatorX = 0;
+
+    let denominatorY = 0;
+
+
+    for (
+        let i = 0;
+        i < n;
+        i++
+    ) {
+
+        const differenceX =
+            xValues[i] - meanX;
+
+
+        const differenceY =
+            yValues[i] - meanY;
+
+
+        numerator +=
+            differenceX *
+            differenceY;
+
+
+        denominatorX +=
+            differenceX *
+            differenceX;
+
+
+        denominatorY +=
+            differenceY *
+            differenceY;
+
+    }
+
+
+    const denominator =
+        Math.sqrt(
+            denominatorX *
+            denominatorY
+        );
+
+
+    if (denominator === 0) {
+
+        return null;
+
+    }
+
+
+    return numerator / denominator;
+
+}
+
+
+/* =========================================================
+   GET VALID PAIRS
+   ========================================================= */
+
+function getValidPairs(
+    xVariable,
+    yVariable
+) {
+
+    const xValues = [];
+
+    const yValues = [];
+
+    const records = [];
+
+
+    studentData.forEach(
+        function(student) {
+
+            const x =
+                Number(
+                    student[xVariable]
+                );
+
+
+            const y =
+                Number(
+                    student[yVariable]
+                );
+
+
+            if (
+                Number.isFinite(x) &&
+                Number.isFinite(y)
+            ) {
+
+                xValues.push(x);
+
+                yValues.push(y);
+
+                records.push({
+                    x: x,
+                    y: y,
+                    student: student
+                });
+
+            }
+
+        }
+    );
+
+
+    return {
+        xValues,
+        yValues,
+        records
+    };
+
+}
+
+
+/* =========================================================
+   CALCULATE SELECTED CORRELATION
+   ========================================================= */
+
+function calculateCorrelation() {
+
+    clearError();
+
+
+    const xVariable =
+        document.getElementById(
+            "variableX"
+        ).value;
+
+
+    const yVariable =
+        document.getElementById(
+            "variableY"
+        ).value;
+
+
+    if (!xVariable || !yVariable) {
+
+        showError(
+            "Please select both Variable X and Variable Y."
+        );
+
+        return;
+
+    }
+
+
+    if (xVariable === yVariable) {
+
+        showError(
+            "Please select two different variables."
+        );
+
+        return;
+
+    }
+
+
+    const result =
+        getValidPairs(
+            xVariable,
+            yVariable
+        );
+
+
+    if (
+        result.xValues.length < 2
+    ) {
+
+        showError(
+            "There are not enough valid numerical records."
+        );
+
+        return;
+
+    }
+
+
+    const correlation =
+        calculatePearson(
+            result.xValues,
+            result.yValues
+        );
+
+
+    if (correlation === null) {
+
+        showError(
+            "Correlation cannot be calculated because one variable has no variation."
+        );
+
+        return;
+
+    }
+
+
+    const rounded =
+        correlation.toFixed(3);
+
+
+    const relationship =
+        getRelationship(
+            correlation
+        );
+
+
+    const strength =
+        getStrength(
+            correlation
+        );
+
+
+    /*
+     * Update result cards
+     */
+
+    document.getElementById(
+        "correlationValue"
+    ).textContent =
+        rounded;
+
+
+    document.getElementById(
+        "relationshipValue"
+    ).textContent =
+        relationship;
+
+
+    document.getElementById(
+        "strengthValue"
+    ).textContent =
+        strength;
+
+
+    document.getElementById(
+        "observationValue"
+    ).textContent =
+        result.records.length;
+
+
+    document.getElementById(
+        "selectedXDisplay"
+    ).textContent =
+        xVariable;
+
+
+    document.getElementById(
+        "selectedYDisplay"
+    ).textContent =
+        yVariable;
+
+
+    document.getElementById(
+        "topCorrelation"
+    ).textContent =
+        rounded;
+
+
+    document.getElementById(
+        "resultGrid"
+    ).style.display =
+        "grid";
+
+
+    /*
+     * Interpretation
+     */
+
+    const interpretationBox =
+        document.getElementById(
+            "interpretationBox"
+        );
+
+
+    interpretationBox.innerHTML =
+
+        "<strong>Interpretation:</strong> " +
+
+        "The Pearson correlation between " +
+
+        "<strong>" +
+        xVariable +
+        "</strong> and " +
+
+        "<strong>" +
+        yVariable +
+        "</strong> is " +
+
+        "<strong>" +
+        rounded +
+        "</strong>. " +
+
+        "This represents a " +
+
+        "<strong>" +
+        strength.toLowerCase() +
+        " " +
+        relationship.toLowerCase() +
+        "</strong> " +
+
+        "linear relationship in the current dataset. " +
+
+        "This result describes association and should not be interpreted as causation.";
+
+
+    interpretationBox.style.display =
+        "block";
+
+
+    /*
+     * Chart
+     */
+
+    createScatterChart(
+        result.records,
+        xVariable,
+        yVariable,
+        correlation
+    );
+
+
+    /*
+     * Table
+     */
+
+    createCorrelationTable(
+        yVariable
+    );
+
+}
+
+
+/* =========================================================
+   RELATIONSHIP
+   ========================================================= */
+
+function getRelationship(
+    value
+) {
+
+    if (value > 0) {
+
+        return "Positive";
+
+    }
+
+    if (value < 0) {
+
+        return "Negative";
+
+    }
+
+    return "No Direction";
+
+}
+
+
+/* =========================================================
+   STRENGTH
+   ========================================================= */
+
+function getStrength(
+    value
+) {
+
+    const absoluteValue =
+        Math.abs(value);
+
+
+    if (absoluteValue >= 0.7) {
+
+        return "Strong";
+
+    }
+
+    if (absoluteValue >= 0.4) {
+
+        return "Moderate";
+
+    }
+
+    if (absoluteValue >= 0.2) {
+
+        return "Weak";
+
+    }
+
+    return "Very Weak";
+
+}
+
+
+/* =========================================================
+   CREATE SCATTER CHART
+   ========================================================= */
+
+function createScatterChart(
+    records,
+    xVariable,
+    yVariable,
+    correlation
+) {
+
+
+    const points =
+        records.map(
+            function(record) {
+
+                return {
+
+                    x: record.x,
+
+                    y: record.y
+
+                };
+
+            }
+        );
+
+
+    const ctx =
+        document.getElementById(
+            "scatterChart"
+        );
+
+
+    if (scatterChart !== null) {
+
+        scatterChart.destroy();
+
+    }
+
+
+    scatterChart =
+        new Chart(
+            ctx,
+            {
+
+                type: "scatter",
+
+                data: {
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                xVariable +
+                                " vs " +
+                                yVariable,
+
+                            data:
+                                points,
+
+                            pointRadius: 5,
+
+                            pointHoverRadius: 7
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        x: {
+
+                            type: "linear",
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    xVariable
+
+                            }
+
+                        },
+
+
+                        y: {
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    yVariable
+
+                            }
+
+                        }
+
+                    },
+
+
+                    plugins: {
+
+                        legend: {
+
+                            position:
+                                "bottom"
+
+                        },
+
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label:
+                                    function(context) {
+
+                                        return (
+                                            xVariable +
+                                            ": " +
+                                            context.parsed.x +
+                                            " | " +
+                                            yVariable +
+                                            ": " +
+                                            context.parsed.y
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    document.getElementById(
+        "chartDescription"
+    ).textContent =
+
+        "Each point represents one student record. " +
+
+        "Pearson correlation = " +
+
+        correlation.toFixed(3) +
+
+        ".";
+
+}
+
+
+/* =========================================================
+   CORRELATION TABLE
+   ========================================================= */
+
+function createCorrelationTable(
+    yVariable
+) {
+
+    const tableBody =
+        document.getElementById(
+            "correlationTableBody"
+        );
+
+
+    tableBody.innerHTML = "";
+
+
+    numericalVariables.forEach(
+        function(variable) {
+
+
+            if (
+                variable === yVariable
+            ) {
+
+                return;
+
+            }
+
+
+            const result =
+                getValidPairs(
+                    variable,
+                    yVariable
+                );
+
+
+            const correlation =
+                calculatePearson(
+                    result.xValues,
+                    result.yValues
+                );
+
+
+            if (correlation === null) {
+
+                return;
+
+            }
+
+
+            const relationship =
+                getRelationship(
+                    correlation
+                );
+
+
+            const strength =
+                getStrength(
+                    correlation
+                );
+
+
+            const row =
+                document.createElement("tr");
+
+
+            let badgeClass =
+                "neutral";
+
+
+            if (correlation > 0) {
+
+                badgeClass =
+                    "positive";
+
+            }
+
+            else if (correlation < 0) {
+
+                badgeClass =
+                    "negative";
+
+            }
+
+
+            row.innerHTML =
+
+                "<td><strong>" +
+                variable +
+                "</strong></td>" +
+
+                "<td>" +
+                correlation.toFixed(3) +
+                "</td>" +
+
+                "<td>" +
+
+                "<span class='badge " +
+                badgeClass +
+                "'>" +
+
+                relationship +
+
+                "</span>" +
+
+                "</td>" +
+
+                "<td>" +
+
+                strength +
+
+                "</td>";
+
+
+            tableBody.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetCorrelation() {
+
+    document.getElementById(
+        "variableX"
+    ).value =
+        "Attendance %";
+
+
+    document.getElementById(
+        "variableY"
+    ).value =
+        "Percentage";
+
+
+    document.getElementById(
+        "resultGrid"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "interpretationBox"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "selectedXDisplay"
+    ).textContent =
+        "—";
+
+
+    document.getElementById(
+        "selectedYDisplay"
+    ).textContent =
+        "—";
+
+
+    document.getElementById(
+        "topCorrelation"
+    ).textContent =
+        "—";
+
+
+    document.getElementById(
+        "correlationTableBody"
+    ).innerHTML =
+
+        "<tr>" +
+
+        "<td colspan='4' style='text-align:center;'>" +
+
+        "Select a Y variable and calculate correlation." +
+
+        "</td>" +
+
+        "</tr>";
+
+
+    document.getElementById(
+        "chartDescription"
+    ).textContent =
+
+        "Select two variables and calculate the correlation " +
+        "to display the student-level scatter plot.";
+
+
+    if (scatterChart !== null) {
+
+        scatterChart.destroy();
+
+        scatterChart = null;
+
+    }
+
+
+    clearError();
+
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+function showError(
+    message
+) {
+
+    const error =
+        document.getElementById(
+            "errorMessage"
+        );
+
+
+    error.textContent =
+        message;
+
+
+    error.style.display =
+        "block";
+
+}
+
+
+function clearError() {
+
+    const error =
+        document.getElementById(
+            "errorMessage"
+        );
+
+
+    error.textContent =
+        "";
+
+
+    error.style.display =
+        "none";
+
+}
+
+
+/* =========================================================
+   UPDATE DISPLAY
+   ========================================================= */
+
+function updateSelectedDisplay() {
+
+    const x =
+        document.getElementById(
+            "variableX"
+        ).value;
+
+
+    const y =
+        document.getElementById(
+            "variableY"
+        ).value;
+
+
+    document.getElementById(
+        "selectedXDisplay"
+    ).textContent =
+        x || "—";
+
+
+    document.getElementById(
+        "selectedYDisplay"
+    ).textContent =
+        y || "—";
+
+}
+
+
+/* =========================================================
+   DROPDOWN CHANGE EVENTS
+   ========================================================= */
+
+document.getElementById(
+    "variableX"
+).addEventListener(
+    "change",
+    updateSelectedDisplay
+);
+
+
+document.getElementById(
+    "variableY"
+).addEventListener(
+    "change",
+    updateSelectedDisplay
+);
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+loadStudentData();
+
+
+</script>
+
+
+</body>
+
+</html>

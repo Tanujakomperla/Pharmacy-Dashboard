@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Statistics | Pharmacy Student Analytics Dashboard
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #1f2937;
+
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1457a6,
+                    #1d70c9
+                );
+
+            color: white;
+
+            padding:
+                28px 40px;
+
+        }
+
+
+        .header h1 {
+
+            margin: 0;
+
+            font-size: 30px;
+
+        }
+
+
+        .header p {
+
+            margin:
+                8px 0 0;
+
+            font-size: 16px;
+
+            opacity: 0.95;
+
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+           ===================================================== */
+
+        .navbar {
+
+            background: white;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            padding:
+                0 30px;
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 4px;
+
+        }
+
+
+        .navbar a {
+
+            text-decoration: none;
+
+            color: #374151;
+
+            padding:
+                16px 18px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            border-bottom:
+                3px solid transparent;
+
+        }
+
+
+        .navbar a:hover {
+
+            color: #1769c2;
+
+            background: #f4f8fd;
+
+        }
+
+
+        .navbar a.active {
+
+            color: #1769c2;
+
+            border-bottom:
+                3px solid #1769c2;
+
+        }
+
+
+        /* =====================================================
+           CONTAINER
+           ===================================================== */
+
+        .container {
+
+            max-width: 1500px;
+
+            margin: auto;
+
+            padding:
+                30px 35px 50px;
+
+        }
+
+
+        /* =====================================================
+           PAGE TITLE
+           ===================================================== */
+
+        .page-heading {
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .page-heading h2 {
+
+            margin:
+                0 0 8px;
+
+            color: #1769c2;
+
+            font-size: 28px;
+
+        }
+
+
+        .page-heading p {
+
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 15px;
+
+        }
+
+
+        /* =====================================================
+           CONTROL PANEL
+           ===================================================== */
+
+        .control-panel {
+
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+
+        }
+
+
+        .control-title {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .control-title h3 {
+
+            margin: 0;
+
+            font-size: 20px;
+
+        }
+
+
+        .control-title p {
+
+            margin:
+                6px 0 0;
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+        }
+
+
+        .control-row {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr auto;
+
+            gap: 15px;
+
+            align-items: end;
+
+        }
+
+
+        .control-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .control-group label {
+
+            margin-bottom: 7px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #374151;
+
+        }
+
+
+        .control-group select {
+
+            width: 100%;
+
+            padding:
+                12px 13px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            background: white;
+
+            font-size: 14px;
+
+            outline: none;
+
+        }
+
+
+        .control-group select:focus {
+
+            border-color: #1769c2;
+
+        }
+
+
+        .calculate-button {
+
+            border: none;
+
+            border-radius: 7px;
+
+            padding:
+                12px 25px;
+
+            background: #1769c2;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+
+        .calculate-button:hover {
+
+            background: #125ba9;
+
+        }
+
+
+        /* =====================================================
+           SELECTED VARIABLE
+           ===================================================== */
+
+        .selected-variable {
+
+            margin-top: 18px;
+
+            padding: 12px 15px;
+
+            background: #f7faff;
+
+            border:
+                1px solid #dbe8f7;
+
+            border-radius: 7px;
+
+            color: #1769c2;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =====================================================
+           STATISTICS CARDS
+           ===================================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    6,
+                    minmax(140px, 1fr)
+                );
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border:
+                1px solid #edf0f4;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+
+        }
+
+
+        .stat-title {
+
+            color: #687386;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            margin-bottom: 9px;
+
+        }
+
+
+        .stat-value {
+
+            color: #1769c2;
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            word-break: break-word;
+
+        }
+
+
+        .stat-description {
+
+            margin-top: 6px;
+
+            color: #8a94a3;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           MAIN GRID
+           ===================================================== */
+
+        .main-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .section {
+
+            background: white;
+
+            border:
+                1px solid #edf0f4;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+
+        }
+
+
+        .section h3 {
+
+            margin:
+                0 0 7px;
+
+            font-size: 20px;
+
+        }
+
+
+        .section-subtitle {
+
+            margin:
+                0 0 20px;
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================================
+           CHART
+           ===================================================== */
+
+        .chart-container {
+
+            position: relative;
+
+            height: 390px;
+
+        }
+
+
+        /* =====================================================
+           DATA TABLE
+           ===================================================== */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+
+        }
+
+
+        th {
+
+            background: #f1f6fc;
+
+            color: #374151;
+
+            padding:
+                13px 12px;
+
+            text-align: left;
+
+            font-size: 12px;
+
+            border-bottom:
+                1px solid #dbe3ec;
+
+        }
+
+
+        td {
+
+            padding:
+                13px 12px;
+
+            font-size: 12px;
+
+            border-bottom:
+                1px solid #edf0f4;
+
+        }
+
+
+        tr:hover td {
+
+            background: #f8fbff;
+
+        }
+
+
+        /* =====================================================
+           MODE DISPLAY
+           ===================================================== */
+
+        .mode-value {
+
+            display: inline-block;
+
+            background: #eef6ff;
+
+            color: #1769c2;
+
+            padding:
+                5px 9px;
+
+            border-radius: 5px;
+
+            font-weight: 600;
+
+            margin-right: 4px;
+
+            margin-bottom: 3px;
+
+        }
+
+
+        /* =====================================================
+           INFORMATION
+           ===================================================== */
+
+        .info-box {
+
+            background: #f7faff;
+
+            border:
+                1px solid #dbe8f7;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            color: #4b5563;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+
+        }
+
+
+        .info-box strong {
+
+            color: #1769c2;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #7b8492;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 1200px) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(
+                        3,
+                        1fr
+                    );
+
+            }
+
+        }
+
+
+        @media (max-width: 900px) {
+
+            .main-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .control-row {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .header {
+
+                padding: 22px;
+
+            }
+
+            .header h1 {
+
+                font-size: 23px;
+
+            }
+
+            .container {
+
+                padding:
+                    25px 15px 40px;
+
+            }
+
+            .navbar {
+
+                padding:
+                    0 10px;
+
+                overflow-x: auto;
+
+                flex-wrap: nowrap;
+
+            }
+
+            .navbar a {
+
+                white-space: nowrap;
+
+                padding:
+                    12px 10px;
+
+                font-size: 12px;
+
+            }
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="header">
+
+    <h1>
+        Pharmacy Student Analytics Dashboard
+    </h1>
+
+    <p>
+        Academic Performance &amp; Student Data Analysis
+    </p>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+
+<nav class="navbar">
+
+    <a href="{{ url_for('index') }}">
+        Overview
+    </a>
+
+    <a href="{{ url_for('students_information') }}">
+        Student Information
+    </a>
+
+    <a href="{{ url_for('academic_analysis') }}">
+        Academic Analysis
+    </a>
+
+    <a href="{{ url_for('statistics') }}"
+       class="active">
+        Statistics
+    </a>
+
+    <a href="{{ url_for('correlation') }}">
+        Correlation
+    </a>
+
+    <a href="{{ url_for('prediction') }}">
+        Prediction
+    </a>
+
+    <a href="{{ url_for('add_student_page') }}"
+       style="color:#1769c2; font-weight:700;">
+        + Add Student
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="container">
+
+
+    <!-- PAGE TITLE -->
+
+    <div class="page-heading">
+
+        <h2>
+            Statistical Analysis
+        </h2>
+
+        <p>
+            Calculate descriptive statistics interactively
+            from the current pharmacy student dataset.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         VARIABLE SELECTOR
+         ===================================================== -->
+
+    <div class="control-panel">
+
+        <div class="control-title">
+
+            <h3>
+                Statistical Calculator
+            </h3>
+
+            <p>
+                Select any numerical variable to calculate
+                its statistical measures.
+            </p>
+
+        </div>
+
+
+        <div class="control-row">
+
+
+            <div class="control-group">
+
+                <label for="variableSelect">
+
+                    Select Variable
+
+                </label>
+
+
+                <select id="variableSelect">
+
+                    {% for column in statistics.keys() %}
+
+                    <option value="{{ column }}">
+
+                        {{ column }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="calculate-button"
+                onclick="calculateSelectedStatistics()"
+            >
+
+                Calculate Statistics
+
+            </button>
+
+
+        </div>
+
+
+        <div class="selected-variable">
+
+            Selected Variable:
+
+            <span id="selectedVariableName">
+
+                {{ statistics.keys()|list|first }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS CARDS
+         ===================================================== -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                MEAN
+            </div>
+
+            <div
+                class="stat-value"
+                id="meanValue"
+            >
+                -
+            </div>
+
+            <div class="stat-description">
+                Average value
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                MEDIAN
+            </div>
+
+            <div
+                class="stat-value"
+                id="medianValue"
+            >
+                -
+            </div>
+
+            <div class="stat-description">
+                Middle value
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                MODE
+            </div>
+
+            <div
+                class="stat-value"
+                id="modeValue"
+            >
+                -
+            </div>
+
+            <div class="stat-description">
+                Most frequent value
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                STANDARD DEVIATION
+            </div>
+
+            <div
+                class="stat-value"
+                id="stdValue"
+            >
+                -
+            </div>
+
+            <div class="stat-description">
+                Data variability
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                MINIMUM
+            </div>
+
+            <div
+                class="stat-value"
+                id="minValue"
+            >
+                -
+            </div>
+
+            <div class="stat-description">
+                Smallest value
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                MAXIMUM
+            </div>
+
+            <div
+                class="stat-value"
+                id="maxValue"
+            >
+                -
+            </div>
+
+            <div class="stat-description">
+                Largest value
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         CHART + INFORMATION
+         ===================================================== -->
+
+    <div class="main-grid">
+
+
+        <!-- CHART -->
+
+        <div class="section">
+
+            <h3>
+                Statistical Comparison
+            </h3>
+
+            <p class="section-subtitle">
+
+                Mean, median, minimum and maximum
+                for the selected variable.
+
+            </p>
+
+
+            <div class="chart-container">
+
+                <canvas id="statisticsChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="section">
+
+            <h3>
+                What Do These Values Mean?
+            </h3>
+
+            <p class="section-subtitle">
+
+                Interpretation of the calculated statistics.
+
+            </p>
+
+
+            <div class="info-box">
+
+                <p>
+
+                    <strong>Mean:</strong>
+
+                    The arithmetic average of all valid
+                    observations.
+
+                </p>
+
+
+                <p>
+
+                    <strong>Median:</strong>
+
+                    The middle value after sorting the
+                    observations.
+
+                </p>
+
+
+                <p>
+
+                    <strong>Mode:</strong>
+
+                    The value or values that occur most
+                    frequently.
+
+                </p>
+
+
+                <p>
+
+                    <strong>Standard Deviation:</strong>
+
+                    Measures how spread out the observations
+                    are around the mean.
+
+                </p>
+
+
+                <p>
+
+                    <strong>Minimum:</strong>
+
+                    The smallest value in the selected
+                    variable.
+
+                </p>
+
+
+                <p>
+
+                    <strong>Maximum:</strong>
+
+                    The largest value in the selected
+                    variable.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         COMPLETE TABLE
+         ===================================================== -->
+
+    <div class="section">
+
+        <h3>
+            Complete Statistical Summary
+        </h3>
+
+        <p class="section-subtitle">
+
+            Statistics for every numerical variable
+            available in the current dataset.
+
+        </p>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Variable
+                        </th>
+
+                        <th>
+                            Mean
+                        </th>
+
+                        <th>
+                            Median
+                        </th>
+
+                        <th>
+                            Mode
+                        </th>
+
+                        <th>
+                            Standard Deviation
+                        </th>
+
+                        <th>
+                            Minimum
+                        </th>
+
+                        <th>
+                            Maximum
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for column, values in statistics.items() %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ column }}
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            {{ values["mean"] }}
+                        </td>
+
+
+                        <td>
+                            {{ values["median"] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if values["mode"] %}
+
+                                {% for mode in values["mode"] %}
+
+                                <span class="mode-value">
+                                    {{ mode }}
+                                </span>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ values["std"] }}
+                        </td>
+
+
+                        <td>
+                            {{ values["min"] }}
+                        </td>
+
+
+                        <td>
+                            {{ values["max"] }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer class="footer">
+
+    Pharmacy Student Analytics Dashboard
+
+    <br>
+
+    Data-driven academic performance analysis
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+    /* ========================================================
+       STATISTICS DATA FROM FLASK
+       ======================================================== */
+
+    const statisticsData =
+        {{ statistics | tojson | safe }};
+
+
+    /* ========================================================
+       CHART
+       ======================================================== */
+
+    let statisticsChart = null;
+
+
+    /* ========================================================
+       CALCULATE SELECTED VARIABLE
+       ======================================================== */
+
+    function calculateSelectedStatistics() {
+
+
+        const select =
+            document.getElementById(
+                "variableSelect"
+            );
+
+
+        const variable =
+            select.value;
+
+
+        const data =
+            statisticsData[
+                variable
+            ];
+
+
+        if (!data) {
+
+            return;
+
+        }
+
+
+        /* ----------------------------------------------------
+           VARIABLE NAME
+           ---------------------------------------------------- */
+
+        document.getElementById(
+            "selectedVariableName"
+        ).textContent = variable;
+
+
+        /* ----------------------------------------------------
+           MEAN
+           ---------------------------------------------------- */
+
+        document.getElementById(
+            "meanValue"
+        ).textContent = data.mean;
+
+
+        /* ----------------------------------------------------
+           MEDIAN
+           ---------------------------------------------------- */
+
+        document.getElementById(
+            "medianValue"
+        ).textContent = data.median;
+
+
+        /* ----------------------------------------------------
+           MODE
+           ---------------------------------------------------- */
+
+        if (
+            data.mode &&
+            data.mode.length > 0
+        ) {
+
+            document.getElementById(
+                "modeValue"
+            ).textContent =
+                data.mode.join(
+                    ", "
+                );
+
+        } else {
+
+            document.getElementById(
+                "modeValue"
+            ).textContent =
+                "N/A";
+
+        }
+
+
+        /* ----------------------------------------------------
+           STANDARD DEVIATION
+           ---------------------------------------------------- */
+
+        document.getElementById(
+            "stdValue"
+        ).textContent =
+            data.std;
+
+
+        /* ----------------------------------------------------
+           MINIMUM
+           ---------------------------------------------------- */
+
+        document.getElementById(
+            "minValue"
+        ).textContent =
+            data.min;
+
+
+        /* ----------------------------------------------------
+           MAXIMUM
+           ---------------------------------------------------- */
+
+        document.getElementById(
+            "maxValue"
+        ).textContent =
+            data.max;
+
+
+        /* ----------------------------------------------------
+           UPDATE CHART
+           ---------------------------------------------------- */
+
+        updateChart(
+            variable,
+            data
+        );
+
+    }
+
+
+    /* ========================================================
+       UPDATE CHART
+       ======================================================== */
+
+    function updateChart(
+        variable,
+        data
+    ) {
+
+
+        const canvas =
+            document.getElementById(
+                "statisticsChart"
+            );
+
+
+        if (statisticsChart) {
+
+            statisticsChart.destroy();
+
+        }
+
+
+        statisticsChart =
+            new Chart(
+
+                canvas,
+
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: [
+
+                            "Mean",
+
+                            "Median",
+
+                            "Minimum",
+
+                            "Maximum"
+
+                        ],
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    variable,
+
+                                data: [
+
+                                    data.mean,
+
+                                    data.median,
+
+                                    data.min,
+
+                                    data.max
+
+                                ],
+
+                                borderWidth: 1
+
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                title: {
+
+                                    display: true,
+
+                                    text:
+                                        "Value"
+
+                                }
+
+                            }
+
+                        },
+
+
+                        plugins: {
+
+                            legend: {
+
+                                display: true
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+    }
+
+
+    /* ========================================================
+       INITIAL CALCULATION
+       ======================================================== */
+
+    calculateSelectedStatistics();
+
+
+    /* ========================================================
+       CHANGE VARIABLE AUTOMATICALLY
+       ======================================================== */
+
+    document
+        .getElementById(
+            "variableSelect"
+        )
+        .addEventListener(
+
+            "change",
+
+            calculateSelectedStatistics
+
+        );
+
+
+</script>
+
+
+</body>
+
+</html>

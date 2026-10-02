@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Add Student | Pharmacy Student Analytics
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #1457a6,
+                #2478ce
+            );
+
+            color: white;
+
+            padding: 28px 42px;
+        }
+
+        .header h1 {
+            margin: 0;
+
+            font-size: 32px;
+
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+
+            font-size: 17px;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        .navbar {
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 32px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            overflow-x: auto;
+        }
+
+        .navbar a {
+            text-decoration: none;
+
+            color: #1f2937;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            padding: 17px 20px;
+
+            border-bottom:
+                3px solid transparent;
+
+            white-space: nowrap;
+        }
+
+        .navbar a:hover {
+            color: #1769c2;
+
+            background: #f7faff;
+        }
+
+        .navbar a.active {
+            color: #1769c2;
+
+            border-bottom:
+                3px solid #1769c2;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .container {
+            max-width: 1550px;
+
+            margin: auto;
+
+            padding:
+                32px 48px 50px;
+        }
+
+
+        /* =====================================================
+           PAGE TITLE
+        ===================================================== */
+
+        .page-title {
+            margin-bottom: 28px;
+        }
+
+        .page-title h2 {
+            margin: 0;
+
+            color: #1769c2;
+
+            font-size: 30px;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+
+            color: #64748b;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           FILTER CARD
+        ===================================================== */
+
+        .filter-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 26px;
+
+            margin-bottom: 28px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .filter-title {
+            margin: 0 0 22px;
+
+            font-size: 20px;
+
+            color: #172033;
+        }
+
+        .filter-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.3fr
+                1fr
+                1fr
+                1fr
+                1fr;
+
+            gap: 16px;
+        }
+
+        .filter-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #334155;
+        }
+
+        .filter-group input,
+        .filter-group select {
+
+            width: 100%;
+
+            height: 44px;
+
+            padding:
+                0 13px;
+
+            border:
+                1px solid #d3dae4;
+
+            border-radius: 7px;
+
+            background: white;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+
+            border-color: #1769c2;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(23, 105, 194, 0.08);
+        }
+
+        .filter-buttons {
+
+            margin-top: 20px;
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+        .btn {
+
+            border: none;
+
+            border-radius: 7px;
+
+            padding:
+                11px 22px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .btn-primary {
+
+            background: #1769c2;
+
+            color: white;
+        }
+
+        .btn-primary:hover {
+
+            background: #1259a5;
+        }
+
+        .btn-secondary {
+
+            background: #edf2f7;
+
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+
+            background: #e2e8f0;
+        }
+
+
+        /* =====================================================
+           KPI CARDS
+        ===================================================== */
+
+        .kpi-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            min-height: 120px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .kpi-title {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+
+            color: #1769c2;
+
+            font-size: 30px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           TABLE SECTION
+        ===================================================== */
+
+        .table-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 26px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .table-header {
+
+            margin-bottom: 20px;
+        }
+
+        .table-header h3 {
+
+            margin: 0;
+
+            font-size: 21px;
+
+            color: #172033;
+        }
+
+        .table-header p {
+
+            margin: 6px 0 0;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 8px;
+        }
+
+        table {
+
+            width: 100%;
+
+            min-width: 1350px;
+
+            border-collapse: collapse;
+
+            font-size: 13px;
+        }
+
+        thead {
+
+            background: #f1f6fc;
+        }
+
+        th {
+
+            padding:
+                14px 12px;
+
+            text-align: left;
+
+            color: #243b53;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+            border-bottom:
+                1px solid #dbe5ef;
+        }
+
+        td {
+
+            padding:
+                13px 12px;
+
+            color: #334155;
+
+            border-bottom:
+                1px solid #edf1f5;
+
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+
+            background: #f8fbff;
+        }
+
+
+        /* =====================================================
+           PERCENTAGE BADGE
+        ===================================================== */
+
+        .percentage {
+
+            display: inline-block;
+
+            padding:
+                5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .high {
+
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+        .medium {
+
+            background: #fef3c7;
+
+            color: #a16207;
+        }
+
+        .low {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 28px;
+
+            color: #7b8492;
+
+            font-size: 12px;
+
+            background: #f4f7fb;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1200px) {
+
+            .filter-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .kpi-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+
+        @media (max-width: 750px) {
+
+            .header {
+
+                padding: 24px;
+            }
+
+            .header h1 {
+
+                font-size: 25px;
+            }
+
+            .container {
+
+                padding:
+                    25px 18px 40px;
+            }
+
+            .filter-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+
+                padding: 0 10px;
+            }
+
+            .navbar a {
+
+                padding:
+                    14px 12px;
+
+                font-size: 12px;
+            }
+        }
+
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #e7f8ef;
+            color: #0f6b3e;
+            border: 1px solid #b6ecd0;
+        }
+
+        .alert-error {
+            background: #fdecec;
+            color: #9b2226;
+            border: 1px solid #f7c2c2;
+        }
+
+        .form-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #172033;
+            margin: 26px 0 14px;
+            padding-top: 18px;
+            border-top: 1px solid #edf0f4;
+        }
+
+        .form-section-title:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: 44px;
+            padding: 0 13px;
+            border: 1px solid #d3dae4;
+            border-radius: 7px;
+            background: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1769c2;
+            box-shadow: 0 0 0 2px rgba(23, 105, 194, 0.08);
+        }
+
+        .form-hint {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+<body>
+
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <h1>
+        Pharmacy Student Analytics Dashboard
+    </h1>
+
+    <p>
+        Academic Performance &amp; Student Data Analysis
+    </p>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav class="navbar">
+
+    <a href="{{ url_for('index') }}">
+        Overview
+    </a>
+
+    <a
+        href="{{ url_for('students_information') }}"
+        class="active">
+
+        Student Information
+
+    </a>
+
+    <a href="{{ url_for('academic_analysis') }}">
+        Academic Analysis
+    </a>
+
+    <a href="{{ url_for('statistics') }}">
+        Statistics
+    </a>
+
+    <a href="{{ url_for('correlation') }}">
+        Correlation
+    </a>
+
+    <a href="{{ url_for('prediction') }}">
+        Prediction
+    </a>
+
+    <a href="{{ url_for('add_student_page') }}"
+       style="color:#1769c2; font-weight:700;">
+        + Add Student
+    </a>
+
+</nav>
+
+
+
+<main class="container">
+
+    <div class="page-title">
+        <h2>Add Student</h2>
+        <p>Enter one student's details below. They are saved straight to the database and appear across the whole dashboard immediately &mdash; no file upload needed.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="filter-card">
+
+        <form method="POST" action="{{ url_for('add_student_page') }}">
+
+            <div class="form-section-title">Student Details</div>
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="student_name" value="{{ form.get('student_name', '') }}" placeholder="e.g. Priya Reddy" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" required>
+                        <option value="">Select</option>
+                        <option value="Female" {{ 'selected' if form.get('gender') == 'Female' }}>Female</option>
+                        <option value="Male" {{ 'selected' if form.get('gender') == 'Male' }}>Male</option>
+                        <option value="Other" {{ 'selected' if form.get('gender') == 'Other' }}>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="age" min="16" max="60" value="{{ form.get('age', '') }}" placeholder="e.g. 21" required>
+                </div>
+
+            </div>
+
+            <div class="form-section-title">Academic Performance</div>
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Attendance %</label>
+                    <input type="number" step="0.1" name="attendance" min="0" max="100" value="{{ form.get('attendance', '') }}" placeholder="e.g. 88" required>
+                </div>
+
+                <div class="form-group">
+                    <label>CGPA (out of 10)</label>
+                    <input type="number" step="0.01" name="cgpa" min="0" max="10" value="{{ form.get('cgpa', '') }}" placeholder="e.g. 8.5" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Backlogs</label>
+                    <input type="number" name="backlogs" min="0" value="{{ form.get('backlogs', '') }}" placeholder="e.g. 0" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Medicinal Chemistry - II</label>
+                    <input type="number" name="medicinal_chemistry_ii" min="0" max="100" value="{{ form.get('medicinal_chemistry_ii', '') }}" placeholder="Marks out of 100" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Industrial Pharmacy - I</label>
+                    <input type="number" name="industrial_pharmacy_i" min="0" max="100" value="{{ form.get('industrial_pharmacy_i', '') }}" placeholder="Marks out of 100" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pharmacology - II</label>
+                    <input type="number" name="pharmacology_ii" min="0" max="100" value="{{ form.get('pharmacology_ii', '') }}" placeholder="Marks out of 100" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pharmacognosy and Phytochemistry - II</label>
+                    <input type="number" name="pharmacognosy_phytochemistry_ii" min="0" max="100" value="{{ form.get('pharmacognosy_phytochemistry_ii', '') }}" placeholder="Marks out of 100" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pharmaceutical Jurisprudence</label>
+                    <input type="number" name="pharmaceutical_jurisprudence" min="0" max="100" value="{{ form.get('pharmaceutical_jurisprudence', '') }}" placeholder="Marks out of 100" required>
+                </div>
+
+                <div class="form-group">
+                    <label>GPAT Mock Score</label>
+                    <input type="number" name="gpat_mock_score" min="0" max="200" value="{{ form.get('gpat_mock_score', '') }}" placeholder="e.g. 120" required>
+                </div>
+
+            </div>
+            <p class="form-hint">Total Marks and Percentage are calculated automatically from the five subject marks above.</p>
+
+            <div class="form-section-title">Status</div>
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Internship Status</label>
+                    <select name="internship_status" required>
+                        <option value="">Select</option>
+                        <option value="Not Started" {{ 'selected' if form.get('internship_status') == 'Not Started' }}>Not Started</option>
+                        <option value="Ongoing" {{ 'selected' if form.get('internship_status') == 'Ongoing' }}>Ongoing</option>
+                        <option value="Completed" {{ 'selected' if form.get('internship_status') == 'Completed' }}>Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Project Status</label>
+                    <select name="project_status" required>
+                        <option value="">Select</option>
+                        <option value="Not Started" {{ 'selected' if form.get('project_status') == 'Not Started' }}>Not Started</option>
+                        <option value="Ongoing" {{ 'selected' if form.get('project_status') == 'Ongoing' }}>Ongoing</option>
+                        <option value="Completed" {{ 'selected' if form.get('project_status') == 'Completed' }}>Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Placement Status</label>
+                    <select name="placement_status" required>
+                        <option value="">Select</option>
+                        <option value="Not Yet" {{ 'selected' if form.get('placement_status') == 'Not Yet' }}>Not Yet</option>
+                        <option value="Preparing" {{ 'selected' if form.get('placement_status') == 'Preparing' }}>Preparing</option>
+                        <option value="Placed" {{ 'selected' if form.get('placement_status') == 'Placed' }}>Placed</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="filter-buttons">
+                <button type="submit" class="btn btn-primary">Save Student</button>
+                <a href="{{ url_for('students_information') }}" class="btn btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center;">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>

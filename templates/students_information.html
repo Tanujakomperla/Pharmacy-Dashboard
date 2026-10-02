@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Student Information | Pharmacy Student Analytics
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #1457a6,
+                #2478ce
+            );
+
+            color: white;
+
+            padding: 28px 42px;
+        }
+
+        .header h1 {
+            margin: 0;
+
+            font-size: 32px;
+
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+
+            font-size: 17px;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        .navbar {
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 32px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            overflow-x: auto;
+        }
+
+        .navbar a {
+            text-decoration: none;
+
+            color: #1f2937;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            padding: 17px 20px;
+
+            border-bottom:
+                3px solid transparent;
+
+            white-space: nowrap;
+        }
+
+        .navbar a:hover {
+            color: #1769c2;
+
+            background: #f7faff;
+        }
+
+        .navbar a.active {
+            color: #1769c2;
+
+            border-bottom:
+                3px solid #1769c2;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .container {
+            max-width: 1550px;
+
+            margin: auto;
+
+            padding:
+                32px 48px 50px;
+        }
+
+
+        /* =====================================================
+           PAGE TITLE
+        ===================================================== */
+
+        .page-title {
+            margin-bottom: 28px;
+        }
+
+        .page-title h2 {
+            margin: 0;
+
+            color: #1769c2;
+
+            font-size: 30px;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+
+            color: #64748b;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           FILTER CARD
+        ===================================================== */
+
+        .filter-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 26px;
+
+            margin-bottom: 28px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .filter-title {
+            margin: 0 0 22px;
+
+            font-size: 20px;
+
+            color: #172033;
+        }
+
+        .filter-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.3fr
+                1fr
+                1fr
+                1fr
+                1fr;
+
+            gap: 16px;
+        }
+
+        .filter-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #334155;
+        }
+
+        .filter-group input,
+        .filter-group select {
+
+            width: 100%;
+
+            height: 44px;
+
+            padding:
+                0 13px;
+
+            border:
+                1px solid #d3dae4;
+
+            border-radius: 7px;
+
+            background: white;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+
+            border-color: #1769c2;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(23, 105, 194, 0.08);
+        }
+
+        .filter-buttons {
+
+            margin-top: 20px;
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+        .btn {
+
+            border: none;
+
+            border-radius: 7px;
+
+            padding:
+                11px 22px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .btn-primary {
+
+            background: #1769c2;
+
+            color: white;
+        }
+
+        .btn-primary:hover {
+
+            background: #1259a5;
+        }
+
+        .btn-secondary {
+
+            background: #edf2f7;
+
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+
+            background: #e2e8f0;
+        }
+
+
+        /* =====================================================
+           KPI CARDS
+        ===================================================== */
+
+        .kpi-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            min-height: 120px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .kpi-title {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+
+            color: #1769c2;
+
+            font-size: 30px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           TABLE SECTION
+        ===================================================== */
+
+        .table-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 26px;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.06);
+
+            border:
+                1px solid #edf0f4;
+        }
+
+        .table-header {
+
+            margin-bottom: 20px;
+        }
+
+        .table-header h3 {
+
+            margin: 0;
+
+            font-size: 21px;
+
+            color: #172033;
+        }
+
+        .table-header p {
+
+            margin: 6px 0 0;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 8px;
+        }
+
+        table {
+
+            width: 100%;
+
+            min-width: 1350px;
+
+            border-collapse: collapse;
+
+            font-size: 13px;
+        }
+
+        thead {
+
+            background: #f1f6fc;
+        }
+
+        th {
+
+            padding:
+                14px 12px;
+
+            text-align: left;
+
+            color: #243b53;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+            border-bottom:
+                1px solid #dbe5ef;
+        }
+
+        td {
+
+            padding:
+                13px 12px;
+
+            color: #334155;
+
+            border-bottom:
+                1px solid #edf1f5;
+
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+
+            background: #f8fbff;
+        }
+
+
+        /* =====================================================
+           PERCENTAGE BADGE
+        ===================================================== */
+
+        .percentage {
+
+            display: inline-block;
+
+            padding:
+                5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .high {
+
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+        .medium {
+
+            background: #fef3c7;
+
+            color: #a16207;
+        }
+
+        .low {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 28px;
+
+            color: #7b8492;
+
+            font-size: 12px;
+
+            background: #f4f7fb;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1200px) {
+
+            .filter-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .kpi-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+
+        @media (max-width: 750px) {
+
+            .header {
+
+                padding: 24px;
+            }
+
+            .header h1 {
+
+                font-size: 25px;
+            }
+
+            .container {
+
+                padding:
+                    25px 18px 40px;
+            }
+
+            .filter-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+
+                padding: 0 10px;
+            }
+
+            .navbar a {
+
+                padding:
+                    14px 12px;
+
+                font-size: 12px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <h1>
+        Pharmacy Student Analytics Dashboard
+    </h1>
+
+    <p>
+        Academic Performance &amp; Student Data Analysis
+    </p>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav class="navbar">
+
+    <a href="{{ url_for('index') }}">
+        Overview
+    </a>
+
+    <a
+        href="{{ url_for('students_information') }}"
+        class="active">
+
+        Student Information
+
+    </a>
+
+    <a href="{{ url_for('academic_analysis') }}">
+        Academic Analysis
+    </a>
+
+    <a href="{{ url_for('statistics') }}">
+        Statistics
+    </a>
+
+    <a href="{{ url_for('correlation') }}">
+        Correlation
+    </a>
+
+    <a href="{{ url_for('prediction') }}">
+        Prediction
+    </a>
+
+    <a href="{{ url_for('add_student_page') }}"
+       style="color:#1769c2; font-weight:700;">
+        + Add Student
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         TITLE
+    ===================================================== -->
+
+    <div class="page-title">
+
+        <h2>
+            Student Information
+        </h2>
+
+        <p>
+            Search, filter and explore individual pharmacy
+            student academic and career information.
+        </p>
+
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="padding:16px 20px; border-radius:10px; margin-bottom:24px; font-size:14px; font-weight:600;
+                    {% if category == 'success' %}
+                        background:#e7f8ef; color:#0f6b3e; border:1px solid #b6ecd0;
+                    {% else %}
+                        background:#fdecec; color:#9b2226; border:1px solid #f7c2c2;
+                    {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <!-- =====================================================
+         FILTER
+    ===================================================== -->
+
+    <div class="filter-card">
+
+        <h3 class="filter-title">
+            🔎 Filter Student Data
+        </h3>
+
+
+        <div class="filter-grid">
+
+
+            <!-- Student Search -->
+
+            <div class="filter-group">
+
+                <label>
+                    Student ID / Name
+                </label>
+
+                <input
+                    type="text"
+                    id="studentSearch"
+                    placeholder="Search student..."
+                >
+
+            </div>
+
+
+            <!-- Gender -->
+
+            <div class="filter-group">
+
+                <label>
+                    Gender
+                </label>
+
+                <select id="genderFilter">
+
+                    <option value="">
+                        All Genders
+                    </option>
+
+                    {% for gender in genders %}
+
+                    <option value="{{ gender }}">
+                        {{ gender }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- Internship -->
+
+            <div class="filter-group">
+
+                <label>
+                    Internship Status
+                </label>
+
+                <select id="internshipFilter">
+
+                    <option value="">
+                        All
+                    </option>
+
+                    {% for internship in internships %}
+
+                    <option value="{{ internship }}">
+                        {{ internship }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- Project -->
+
+            <div class="filter-group">
+
+                <label>
+                    Project Status
+                </label>
+
+                <select id="projectFilter">
+
+                    <option value="">
+                        All
+                    </option>
+
+                    {% for project in projects %}
+
+                    <option value="{{ project }}">
+                        {{ project }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- Placement -->
+
+            <div class="filter-group">
+
+                <label>
+                    Placement Status
+                </label>
+
+                <select id="placementFilter">
+
+                    <option value="">
+                        All
+                    </option>
+
+                    {% for placement in placements %}
+
+                    <option value="{{ placement }}">
+                        {{ placement }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="filter-buttons">
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="applyFilters()">
+
+                Apply Filters
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="resetFilters()">
+
+                Reset Filters
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         KPI CARDS
+    ===================================================== -->
+
+    <div class="kpi-grid">
+
+
+        <!-- Total Students -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Total Students
+            </div>
+
+            <div
+                class="kpi-value"
+                id="studentCount">
+
+                {{ summary.total_students }}
+
+            </div>
+
+        </div>
+
+
+        <!-- Average CGPA -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average CGPA
+            </div>
+
+            <div
+                class="kpi-value"
+                id="cgpaValue">
+
+                {{ summary.average_cgpa }}
+
+            </div>
+
+        </div>
+
+
+        <!-- Average Percentage -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average Percentage
+            </div>
+
+            <div
+                class="kpi-value"
+                id="percentageValue">
+
+                {{ summary.average_percentage }}%
+
+            </div>
+
+        </div>
+
+
+        <!-- Average Attendance -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Average Attendance
+            </div>
+
+            <div
+                class="kpi-value"
+                id="attendanceValue">
+
+                {{ summary.average_attendance }}%
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         STUDENT TABLE
+    ===================================================== -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <h3>
+                Student Records
+            </h3>
+
+            <p>
+                Detailed information from the current
+                student database.
+            </p>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table id="studentTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student ID
+                        </th>
+
+                        <th>
+                            Student Name
+                        </th>
+
+                        <th>
+                            Gender
+                        </th>
+
+                        <th>
+                            Age
+                        </th>
+
+                        <th>
+                            Year
+                        </th>
+
+                        <th>
+                            Semester
+                        </th>
+
+                        <th>
+                            Attendance %
+                        </th>
+
+                        <th>
+                            CGPA
+                        </th>
+
+                        <th>
+                            Medicinal Chemistry - II
+                        </th>
+
+                        <th>
+                            Industrial Pharmacy - I
+                        </th>
+
+                        <th>
+                            Pharmacology - II
+                        </th>
+
+                        <th>
+                            Pharmacognosy and Phytochemistry - II
+                        </th>
+
+                        <th>
+                            Pharmaceutical Jurisprudence
+                        </th>
+
+                        <th>
+                            Total Marks
+                        </th>
+
+                        <th>
+                            Percentage
+                        </th>
+
+                        <th>
+                            GPAT Mock Score
+                        </th>
+
+                        <th>
+                            Internship Status
+                        </th>
+
+                        <th>
+                            Project Status
+                        </th>
+
+                        <th>
+                            Backlogs
+                        </th>
+
+                        <th>
+                            Placement Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="studentTableBody">
+
+                    {% for student in students %}
+
+                    <tr
+                        data-gender="{{ student['Gender'] }}"
+                        data-internship="{{ student['Internship Status'] }}"
+                        data-project="{{ student['Project Status'] }}"
+                        data-placement="{{ student['Placement Status'] }}"
+                    >
+
+                        <td>
+                            {{ student['Student ID'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Student Name'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Gender'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Age'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Year'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Semester'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Attendance %'] }}
+                        </td>
+
+                        <td>
+                            {{ student['CGPA'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Medicinal Chemistry - II'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Industrial Pharmacy - I'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Pharmacology - II'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Pharmacognosy and Phytochemistry - II'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Pharmaceutical Jurisprudence'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Total Marks'] }}
+                        </td>
+
+                        <td>
+
+                            {% set percentage =
+                                student['Percentage'] | float
+                            %}
+
+                            {% if percentage >= 75 %}
+
+                                <span
+                                    class="percentage high">
+
+                                    {{ percentage }}%
+
+                                </span>
+
+                            {% elif percentage >= 60 %}
+
+                                <span
+                                    class="percentage medium">
+
+                                    {{ percentage }}%
+
+                                </span>
+
+                            {% else %}
+
+                                <span
+                                    class="percentage low">
+
+                                    {{ percentage }}%
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ student['GPAT Mock Score'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Internship Status'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Project Status'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Backlogs'] }}
+                        </td>
+
+                        <td>
+                            {{ student['Placement Status'] }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            <div
+                id="emptyMessage"
+                class="empty"
+                style="display: none;">
+
+                No students match the selected filters.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+    Pharmacy Student Analytics Dashboard
+
+    <br>
+
+    Data-driven academic performance analysis
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   APPLY FILTERS
+========================================================= */
+
+function applyFilters() {
+
+    const search =
+        document
+        .getElementById(
+            "studentSearch"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const gender =
+        document
+        .getElementById(
+            "genderFilter"
+        )
+        .value
+        .toLowerCase();
+
+
+    const internship =
+        document
+        .getElementById(
+            "internshipFilter"
+        )
+        .value
+        .toLowerCase();
+
+
+    const project =
+        document
+        .getElementById(
+            "projectFilter"
+        )
+        .value
+        .toLowerCase();
+
+
+    const placement =
+        document
+        .getElementById(
+            "placementFilter"
+        )
+        .value
+        .toLowerCase();
+
+
+    const rows =
+        document.querySelectorAll(
+            "#studentTableBody tr"
+        );
+
+
+    let visibleRows = [];
+
+
+    rows.forEach(
+        function(row) {
+
+            const rowText =
+                row.innerText.toLowerCase();
+
+
+            const rowGender =
+                row.dataset.gender
+                    .toLowerCase();
+
+
+            const rowInternship =
+                row.dataset.internship
+                    .toLowerCase();
+
+
+            const rowProject =
+                row.dataset.project
+                    .toLowerCase();
+
+
+            const rowPlacement =
+                row.dataset.placement
+                    .toLowerCase();
+
+
+            const matchesSearch =
+                search === ""
+                ||
+                rowText.includes(
+                    search
+                );
+
+
+            const matchesGender =
+                gender === ""
+                ||
+                rowGender === gender;
+
+
+            const matchesInternship =
+                internship === ""
+                ||
+                rowInternship === internship;
+
+
+            const matchesProject =
+                project === ""
+                ||
+                rowProject === project;
+
+
+            const matchesPlacement =
+                placement === ""
+                ||
+                rowPlacement === placement;
+
+
+            const visible =
+                matchesSearch
+                &&
+                matchesGender
+                &&
+                matchesInternship
+                &&
+                matchesProject
+                &&
+                matchesPlacement;
+
+
+            row.style.display =
+                visible
+                ? ""
+                : "none";
+
+
+            if (visible) {
+
+                visibleRows.push(
+                    row
+                );
+
+            }
+
+        }
+    );
+
+
+    updateFilteredStatistics(
+        visibleRows
+    );
+
+
+    document
+        .getElementById(
+            "emptyMessage"
+        )
+        .style.display =
+            visibleRows.length === 0
+            ? "block"
+            : "none";
+
+}
+
+
+/* =========================================================
+   UPDATE FILTERED KPI VALUES
+========================================================= */
+
+function updateFilteredStatistics(
+    rows
+) {
+
+    let cgpaTotal = 0;
+
+    let percentageTotal = 0;
+
+    let attendanceTotal = 0;
+
+    let count = rows.length;
+
+
+    rows.forEach(
+        function(row) {
+
+            const cells =
+                row.querySelectorAll(
+                    "td"
+                );
+
+
+            /*
+                Column indexes:
+
+                0  Student ID
+                1  Student Name
+                2  Gender
+                3  Age
+                4  Year
+                5  Semester
+                6  Attendance
+                7  CGPA
+                8  Medicinal Chemistry
+                9  Industrial Pharmacy
+                10 Pharmacology
+                11 Pharmacognosy
+                12 Jurisprudence
+                13 Total Marks
+                14 Percentage
+            */
+
+
+            attendanceTotal +=
+                parseFloat(
+                    cells[6].innerText
+                ) || 0;
+
+
+            cgpaTotal +=
+                parseFloat(
+                    cells[7].innerText
+                ) || 0;
+
+
+            percentageTotal +=
+                parseFloat(
+                    cells[14]
+                        .innerText
+                        .replace(
+                            "%",
+                            ""
+                        )
+                ) || 0;
+
+        }
+    );
+
+
+    const averageCGPA =
+        count > 0
+        ? (
+            cgpaTotal / count
+        ).toFixed(2)
+        : "0.00";
+
+
+    const averagePercentage =
+        count > 0
+        ? (
+            percentageTotal / count
+        ).toFixed(2)
+        : "0.00";
+
+
+    const averageAttendance =
+        count > 0
+        ? (
+            attendanceTotal / count
+        ).toFixed(2)
+        : "0.00";
+
+
+    document
+        .getElementById(
+            "studentCount"
+        )
+        .innerText =
+            count;
+
+
+    document
+        .getElementById(
+            "cgpaValue"
+        )
+        .innerText =
+            averageCGPA;
+
+
+    document
+        .getElementById(
+            "percentageValue"
+        )
+        .innerText =
+            averagePercentage + "%";
+
+
+    document
+        .getElementById(
+            "attendanceValue"
+        )
+        .innerText =
+            averageAttendance + "%";
+
+}
+
+
+/* =========================================================
+   RESET FILTERS
+========================================================= */
+
+function resetFilters() {
+
+    document
+        .getElementById(
+            "studentSearch"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "genderFilter"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "internshipFilter"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "projectFilter"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "placementFilter"
+        )
+        .value = "";
+
+
+    const rows =
+        document.querySelectorAll(
+            "#studentTableBody tr"
+        );
+
+
+    rows.forEach(
+        function(row) {
+
+            row.style.display = "";
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "emptyMessage"
+        )
+        .style.display = "none";
+
+
+    /*
+        Restore original dataset KPIs
+        from Flask.
+    */
+
+    document
+        .getElementById(
+            "studentCount"
+        )
+        .innerText =
+            "{{ summary.total_students }}";
+
+
+    document
+        .getElementById(
+            "cgpaValue"
+        )
+        .innerText =
+            "{{ summary.average_cgpa }}";
+
+
+    document
+        .getElementById(
+            "percentageValue"
+        )
+        .innerText =
+            "{{ summary.average_percentage }}%";
+
+
+    document
+        .getElementById(
+            "attendanceValue"
+        )
+        .innerText =
+            "{{ summary.average_attendance }}%";
+
+}
+
+
+/* =========================================================
+   SEARCH AS USER TYPES
+========================================================= */
+
+document
+    .getElementById(
+        "studentSearch"
+    )
+    .addEventListener(
+        "keyup",
+        applyFilters
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
