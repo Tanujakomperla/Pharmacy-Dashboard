@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Pharmacy Week Events{% endblock %}
+{% block content %}
+<div class="ap-page-pad">
+
+    <div class="ap-pagehead">
+        <h1>Pharmacy Week events</h1>
+        <p>Choose the sections you want to take part in. You can join more than one and leave any time.</p>
+    </div>
+
+    <div class="ap-card">
+    {% if not sections %}
+        <div class="ap-empty">The administrator has not added any sections yet.</div>
+    {% endif %}
+
+    {% for event_name, items in sections|groupby('event_name') %}
+        <div class="ap-eventname">{{ event_name }}</div>
+        {% for section in items %}
+        <div class="ap-section-card">
+            <div>
+                <h3>{{ section.section_name }}</h3>
+                {% if section.description %}<p>{{ section.description }}</p>{% endif %}
+            </div>
+            {% if section.id in joined_ids %}
+            <form method="POST" action="{{ url_for('student_leave', section_id=section.id) }}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+                <span class="ap-badge ap-badge-ok" style="margin-right:8px">Registered</span>
+                <button class="ap-btn ap-btn-ghost ap-btn-sm" type="submit">Leave</button>
+            </form>
+            {% else %}
+            <form method="POST" action="{{ url_for('student_join', section_id=section.id) }}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+                <button class="ap-btn ap-btn-primary ap-btn-sm" type="submit">Join</button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Submissions{% endblock %}
+{% block content %}
+<div class="ap-page-pad">
+
+    <div class="ap-pagehead">
+        <h1>Submissions</h1>
+        <p>See which students have submitted their marks and who is still pending. Students can never see each other's marks; only you can.</p>
+        <div class="ap-actions">
+            <a class="ap-btn ap-btn-primary ap-btn-sm" href="{{ url_for('admin_export') }}">Download all data (CSV)</a>
+            <a class="ap-btn ap-btn-ghost ap-btn-sm" href="{{ url_for('add_student_page') }}">Add a student manually</a>
+        </div>
+    </div>
+
+    <div class="ap-kpis">
+        <div class="ap-kpi"><div class="ap-kpi-label">Registered students</div><div class="ap-kpi-value">{{ registered }}</div><div class="ap-kpi-note">Accounts created</div></div>
+        <div class="ap-kpi"><div class="ap-kpi-label">Submitted</div><div class="ap-kpi-value">{{ submitted }}</div><div class="ap-kpi-note">Marks received</div></div>
+        <div class="ap-kpi"><div class="ap-kpi-label">Pending</div><div class="ap-kpi-value">{{ pending }}</div><div class="ap-kpi-note">Not submitted yet</div></div>
+        <div class="ap-kpi"><div class="ap-kpi-label">Completion</div><div class="ap-kpi-value">{{ completion }}%</div><div class="ap-kpi-note">{{ total_records }} records in dashboard</div></div>
+    </div>
+
+    <div class="ap-card">
+        <h2>Student accounts</h2>
+        <p class="ap-sub">Everyone who registered, and whether they have submitted.</p>
+        {% if tracker %}
+        <div class="ap-table-wrap"><table class="ap-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Student ID</th><th>Percentage</th><th>Submitted</th><th></th></tr></thead>
+            <tbody>
+            {% for row in tracker %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.email }}</td>
+                    <td>{% if row.record %}<span class="ap-badge ap-badge-ok">Submitted</span>{% else %}<span class="ap-badge ap-badge-warn">Pending</span>{% endif %}</td>
+                    <td>{{ row.record.student_id if row.record else '-' }}</td>
+                    <td>{{ ('%.1f%%'|format(row.record.percentage)) if row.record else '-' }}</td>
+                    <td>{{ (row.record.updated_at or row.record.created_at)|dt if row.record else 'Registered ' ~ (row.registered|dt) }}</td>
+                    <td>{% if row.record %}
+                        <form class="ap-inline" method="POST" action="{{ url_for('admin_delete_record', student_id=row.record.student_id) }}" onsubmit="return confirm('Delete this record? The student can submit again.');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+                            <button class="ap-btn ap-btn-danger ap-btn-sm" type="submit">Delete</button>
+                        </form>{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+        {% else %}
+        <div class="ap-empty">No student has registered yet. Share the website link; students click "Create an account".</div>
+        {% endif %}
+    </div>
+
+    {% if manual_records %}
+    <div class="ap-card">
+        <h2>Records added by you</h2>
+        <p class="ap-sub">Entered through "Add Student" (no student account attached).</p>
+        <div class="ap-table-wrap"><table class="ap-table">
+            <thead><tr><th>Student ID</th><th>Name</th><th>Percentage</th><th>Added</th><th></th></tr></thead>
+            <tbody>
+            {% for r in manual_records %}
+                <tr>
+                    <td>{{ r.student_id }}</td><td>{{ r.student_name }}</td><td>{{ '%.1f%%'|format(r.percentage) }}</td><td>{{ r.created_at|dt }}</td>
+                    <td><form class="ap-inline" method="POST" action="{{ url_for('admin_delete_record', student_id=r.student_id) }}" onsubmit="return confirm('Delete this record?');">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+                        <button class="ap-btn ap-btn-danger ap-btn-sm" type="submit">Delete</button></form></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+    </div>
+    {% endif %}
+
+    <div class="ap-two">
+        <div class="ap-card">
+            <h2>Needs attention</h2>
+            <p class="ap-sub">Attendance below 75%, any backlog, or percentage below 50%.</p>
+            {% if needs_attention %}
+            <div class="ap-table-wrap"><table class="ap-table" style="min-width:0">
+                <thead><tr><th>Student</th><th>Why</th></tr></thead>
+                <tbody>
+                {% for r in needs_attention %}
+                    <tr><td>{{ r.student_name }}<br><span style="color:#94a3b8;font-size:12px">{{ r.student_id }}</span></td><td>{% for reason in r.reasons %}<span class="ap-badge ap-badge-bad" style="margin:2px 4px 2px 0">{{ reason }}</span>{% endfor %}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+            {% else %}
+            <div class="ap-empty">Nobody needs attention right now.</div>
+            {% endif %}
+        </div>
+
+        <div class="ap-card">
+            <h2>Pharmacy Week participation</h2>
+            <p class="ap-sub">How many students joined each section.</p>
+            {% if sections %}
+            <div class="ap-table-wrap"><table class="ap-table" style="min-width:0">
+                <thead><tr><th>Section</th><th>Joined</th></tr></thead>
+                <tbody>
+                {% for s in sections %}
+                    <tr><td><a href="{{ url_for('admin_event_detail', section_id=s.id) }}" style="color:#1769c2;font-weight:700;text-decoration:none">{{ s.section_name }}</a><br><span style="color:#94a3b8;font-size:12px">{{ s.event_name }}</span></td><td>{{ s.participants }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+            {% else %}
+            <div class="ap-empty">No sections yet. <a href="{{ url_for('admin_events') }}">Add one</a>.</div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

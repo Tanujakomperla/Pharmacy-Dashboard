@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: pharmacy-django-dashboard
+    runtime: python
+    plan: free
+    buildCommand: "bash build.sh"
+    startCommand: "python manage.py setup_portal && gunicorn config.wsgi:application"
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL        # paste your Neon connection string
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

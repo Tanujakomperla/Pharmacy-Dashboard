@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="ap-page-pad">
+
+    <div class="ap-pagehead">
+        <h1>Hello, {{ current_user.name }}</h1>
+        <p>This page is private. Only you and the administrator can see your marks.</p>
+    </div>
+
+    {% if not submission %}
+
+    <div class="ap-card">
+        <h2>You have not submitted your marks yet</h2>
+        <p class="ap-sub">It takes about two minutes. Your marks go straight to the administrator.</p>
+        <a class="ap-btn ap-btn-primary" href="{{ url_for('student_submit') }}">Fill in my marks</a>
+    </div>
+
+    {% else %}
+
+    <div class="ap-kpis">
+        <div class="ap-kpi"><div class="ap-kpi-label">Percentage</div><div class="ap-kpi-value">{{ '%.1f'|format(submission.percentage) }}%</div><div class="ap-kpi-note">Total {{ submission.total_marks }} / 500</div></div>
+        <div class="ap-kpi"><div class="ap-kpi-label">CGPA</div><div class="ap-kpi-value">{{ '%.2f'|format(submission.cgpa) }}</div><div class="ap-kpi-note">Out of 10</div></div>
+        <div class="ap-kpi"><div class="ap-kpi-label">Attendance</div><div class="ap-kpi-value">{{ '%.1f'|format(submission.attendance) }}%</div></div>
+        <div class="ap-kpi"><div class="ap-kpi-label">Backlogs</div><div class="ap-kpi-value">{{ submission.backlogs }}</div><div class="ap-kpi-note">GPAT mock: {{ submission.gpat_mock_score }}</div></div>
+    </div>
+
+    <div class="ap-two">
+
+        <div class="ap-card">
+            <h2>My subject marks</h2>
+            <p class="ap-sub">Student ID {{ submission.student_id }}. Submitted {{ submission.created_at|dt }}{% if submission.updated_at %}, updated {{ submission.updated_at|dt }}{% endif %}.</p>
+
+            {% for row in subject_rows %}
+            <div class="ap-barrow">
+                <div>{{ row.label }}</div>
+                <div class="ap-bar">
+                    <div class="ap-bar-fill" style="width: {{ row.mark }}%"></div>
+                    {% if row.class_avg is not none %}<div class="ap-bar-avg" style="left: calc({{ row.class_avg }}% - 1px)" title="Class average {{ row.class_avg }}"></div>{% endif %}
+                </div>
+                <div class="ap-barval">{{ row.mark }}</div>
+            </div>
+            {% endfor %}
+
+            {% if class_avgs %}
+            <div class="ap-legend">Orange line = class average. It is calculated from {{ class_avgs.n }} students; nobody else's marks are ever shown to you.</div>
+            {% else %}
+            <div class="ap-legend">Class averages appear here once enough students have submitted. Nobody else's marks are ever shown to you.</div>
+            {% endif %}
+
+            <div class="ap-actions"><a class="ap-btn ap-btn-ghost" href="{{ url_for('student_submit') }}">Update my marks</a></div>
+        </div>
+
+        <div>
+            <div class="ap-card">
+                <h2>My progress</h2>
+                <p class="ap-sub">As you reported it.</p>
+                <p style="margin-bottom:10px">Internship: <span class="ap-badge ap-badge-muted">{{ submission.internship_status }}</span></p>
+                <p style="margin-bottom:10px">Project: <span class="ap-badge ap-badge-muted">{{ submission.project_status }}</span></p>
+                <p>Placement: <span class="ap-badge ap-badge-muted">{{ submission.placement_status }}</span></p>
+            </div>
+
+            <div class="ap-card">
+                <h2>My Pharmacy Week sections</h2>
+                {% if joined %}
+                    <p class="ap-sub">You are registered for:</p>
+                    {% for section in joined %}
+                        <p style="margin-bottom:8px"><span class="ap-badge ap-badge-ok">{{ section.section_name }}</span> <span style="color:#6b7280;font-size:13px">{{ section.event_name }}</span></p>
+                    {% endfor %}
+                {% else %}
+                    <p class="ap-sub">You have not joined any section yet.</p>
+                {% endif %}
+                <div class="ap-actions"><a class="ap-btn ap-btn-ghost ap-btn-sm" href="{{ url_for('student_events') }}">Choose sections</a></div>
+            </div>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

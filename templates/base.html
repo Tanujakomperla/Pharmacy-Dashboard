@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Dashboard{% endblock %} | Pharmacy Student Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+
+{% macro nav(endpoint, label, prefix=None) %}
+    {% set active = (request.endpoint == endpoint) or (prefix and request.endpoint and request.endpoint.startswith(prefix)) %}
+    <a class="ap-link {{ 'is-active' if active }}" href="{{ url_for(endpoint) }}">{{ label }}</a>
+{% endmacro %}
+
+{% if current_user %}
+
+<aside class="ap-sidebar" id="apSidebar">
+
+    <div class="ap-brand">Pharmacy <span>Analytics</span></div>
+    <div class="ap-roletag">{{ 'Administrator' if current_user.role == 'admin' else 'Student' }}</div>
+
+    <nav>
+    {% if current_user.role == 'admin' %}
+
+        <div class="ap-nav-label">Dashboard</div>
+        {{ nav('index', 'Overview') }}
+        {{ nav('admin_submissions', 'Submissions') }}
+        {{ nav('students_information', 'Student Information') }}
+        {{ nav('academic_analysis', 'Academic Analysis') }}
+
+        <div class="ap-nav-label">Analytics</div>
+        {{ nav('statistics', 'Statistics') }}
+        {{ nav('correlation', 'Correlation') }}
+        {{ nav('prediction', 'Prediction') }}
+
+        <div class="ap-nav-label">Manage</div>
+        {{ nav('add_student_page', 'Add Student (admin entry)') }}
+        {{ nav('admin_events', 'Pharmacy Week Events', 'admin_event') }}
+
+    {% else %}
+
+        <div class="ap-nav-label">My Account</div>
+        {{ nav('student_dashboard', 'My Dashboard') }}
+        {{ nav('student_submit', 'My Marks Form') }}
+        {{ nav('student_events', 'Pharmacy Week Events') }}
+
+    {% endif %}
+    </nav>
+
+    <div class="ap-userbox">
+        <strong>{{ current_user.name }}</strong>
+        <span>{{ current_user.email }}</span>
+        <form method="POST" action="{{ url_for('logout') }}">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+            <button type="submit" class="ap-logout">Log out</button>
+        </form>
+    </div>
+
+</aside>
+
+<div class="ap-main">
+
+    <header class="ap-topbar">
+        <button type="button" class="ap-menu" id="apMenu" aria-label="Open menu">&#9776;</button>
+        <div class="ap-topbar-title">{{ self.title() }}</div>
+        <div class="ap-chip">{{ current_user.name }} &middot; {{ current_user.role }}</div>
+    </header>
+
+{% else %}
+
+<div class="ap-guest-wrap">
+
+{% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="ap-flashes">
+            {% for category, message in messages %}
+                <div class="ap-flash ap-flash-{{ 'success' if category == 'success' else 'error' }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="ap-content">
+        {% block content %}{% endblock %}
+    </div>
+
+{% if current_user %}
+
+    <footer class="ap-footer">
+        Pharmacy Student Analytics Dashboard &middot; Data-driven academic performance analysis
+    </footer>
+
+</div>
+
+<script>
+    (function () {
+        var button = document.getElementById("apMenu");
+        if (button) {
+            button.addEventListener("click", function () {
+                document.body.classList.toggle("ap-nav-open");
+            });
+        }
+        document.addEventListener("click", function (event) {
+            if (document.body.classList.contains("ap-nav-open") &&
+                !event.target.closest("#apSidebar") &&
+                !event.target.closest("#apMenu")) {
+                document.body.classList.remove("ap-nav-open");
+            }
+        });
+    })();
+</script>
+
+{% else %}
+
+</div>
+
+{% endif %}
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

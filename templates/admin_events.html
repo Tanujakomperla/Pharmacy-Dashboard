@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Pharmacy Week Events{% endblock %}
+{% block content %}
+<div class="ap-page-pad">
+
+    <div class="ap-pagehead">
+        <h1>Pharmacy Week events</h1>
+        <p>Create the sections students can join, and see who registered for each one.</p>
+    </div>
+
+    <div class="ap-card">
+        <h2>Add a section</h2>
+        <p class="ap-sub">For example: Pharmacy Week &rarr; Quiz.</p>
+        <form method="POST" action="{{ url_for('admin_event_add') }}">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+            <div class="ap-form-grid">
+                <div class="ap-field"><label for="event_name">Event name</label><input id="event_name" name="event_name" value="Pharmacy Week" maxlength="80" required></div>
+                <div class="ap-field"><label for="section_name">Section name</label><input id="section_name" name="section_name" maxlength="80" required></div>
+                <div class="ap-field"><label for="description">Short description</label><input id="description" name="description" maxlength="300"></div>
+            </div>
+            <div class="ap-actions"><button class="ap-btn ap-btn-primary" type="submit">Add section</button></div>
+        </form>
+    </div>
+
+    <div class="ap-card">
+        <h2>All sections</h2>
+        {% if sections %}
+        <div class="ap-table-wrap"><table class="ap-table">
+            <thead><tr><th>Event</th><th>Section</th><th>Description</th><th>Joined</th><th></th></tr></thead>
+            <tbody>
+            {% for s in sections %}
+                <tr>
+                    <td>{{ s.event_name }}</td>
+                    <td><a href="{{ url_for('admin_event_detail', section_id=s.id) }}" style="color:#1769c2;font-weight:700;text-decoration:none">{{ s.section_name }}</a></td>
+                    <td>{{ s.description or '-' }}</td>
+                    <td>{{ s.participants }}</td>
+                    <td><form class="ap-inline" method="POST" action="{{ url_for('admin_event_delete', section_id=s.id) }}" onsubmit="return confirm('Delete this section and all its registrations?');">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+                        <button class="ap-btn ap-btn-danger ap-btn-sm" type="submit">Delete</button></form></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+        {% else %}
+        <div class="ap-empty">No sections yet.</div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ section.section_name }}{% endblock %}
+{% block content %}
+<div class="ap-page-pad">
+
+    <div class="ap-pagehead">
+        <h1>{{ section.section_name }}</h1>
+        <p>{{ section.event_name }}{% if section.description %} &middot; {{ section.description }}{% endif %}</p>
+        <div class="ap-actions"><a class="ap-btn ap-btn-ghost ap-btn-sm" href="{{ url_for('admin_events') }}">&larr; All sections</a></div>
+    </div>
+
+    <div class="ap-card">
+        <h2>Participants ({{ people|length }})</h2>
+        {% if people %}
+        <div class="ap-table-wrap"><table class="ap-table">
+            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Registered</th></tr></thead>
+            <tbody>
+            {% for p in people %}<tr><td>{{ loop.index }}</td><td>{{ p.user_name }}</td><td>{{ p.user_email }}</td><td>{{ p.created_at|dt }}</td></tr>{% endfor %}
+            </tbody>
+        </table></div>
+        {% else %}
+        <div class="ap-empty">Nobody has joined this section yet.</div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

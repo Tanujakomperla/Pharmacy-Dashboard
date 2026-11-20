@@ -1,0 +1,9 @@
+Django>=5.1,<5.3
+pandas
+numpy
+scikit-learn
+gunicorn
+whitenoise
+dj-database-url
+psycopg2-binary
+Jinja2

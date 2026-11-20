@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }}{% endblock %}
+{% block content %}
+<div class="{{ 'ap-page-pad' if current_user else 'ap-auth' }}">
+    <div class="ap-card">
+        <h2>Error {{ code }}</h2>
+        <p class="ap-sub">{{ message }}</p>
+        <a class="ap-btn ap-btn-primary" href="{{ url_for('login') if not current_user else (url_for('index') if current_user.role == 'admin' else url_for('student_dashboard')) }}">Go to my home page</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<div class="ap-auth">
+    <h1>Student sign up</h1>
+    <p class="ap-sub">Create your account, then fill in your marks. Only you and the administrator can see them.</p>
+
+    <form method="POST" action="{{ url_for('register') }}">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token() }}">
+
+        <div class="ap-field">
+            <label for="name">Full name</label>
+            <input id="name" type="text" name="name" value="{{ form.get('name', '') }}" maxlength="80" required autofocus>
+        </div>
+
+        <div class="ap-field">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" value="{{ form.get('email', '') }}" autocomplete="username" required>
+        </div>
+
+        <div class="ap-field">
+            <label for="password">Password (at least 8 characters)</label>
+            <input id="password" type="password" name="password" minlength="8" autocomplete="new-password" required>
+        </div>
+
+        <div class="ap-field">
+            <label for="confirm_password">Confirm password</label>
+            <input id="confirm_password" type="password" name="confirm_password" minlength="8" autocomplete="new-password" required>
+        </div>
+
+        {% if needs_code %}
+        <div class="ap-field">
+            <label for="signup_code">Sign-up code (ask your teacher)</label>
+            <input id="signup_code" type="text" name="signup_code" required>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="ap-btn ap-btn-primary">Create account</button>
+    </form>
+
+    <div class="ap-auth-alt">
+        Already registered? <a href="{{ url_for('login') }}">Log in</a>
+    </div>
+</div>
+{% endblock %}
